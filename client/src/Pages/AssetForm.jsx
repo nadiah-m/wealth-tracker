@@ -33,9 +33,20 @@ function AssetForm() {
     let rate = Math.pow(1 + r / n, n / 12) - 1;
     let fRate = Math.pow(1 + rate, nper);
     let futureValue = P * fRate + A * ((fRate - 1) / rate);
-    console.log(futureValue);
+    let futureValueComma = futureValue.toLocaleString("en-US", {
+      maximumFractionDigits: 2,
+    });
+    console.log(futureValueComma);
     futureValues.push(futureValue.toFixed(2));
   }
+
+  console.log(futureValues);
+
+  const finalFutureValue = Number(futureValues[futureValues.length - 1]);
+  const finalFVNr = finalFutureValue.toLocaleString("en-US", {
+    maximumFractionDigits: 2,
+  });
+  console.log(finalFVNr);
 
   const presentValues = [];
 
@@ -153,6 +164,11 @@ function AssetForm() {
           <button>Add to financial goals</button>
         </fieldset>
       </form>
+
+      <p>
+        Based on your compounding schedule and estimated interest rate, you will
+        have ${finalFVNr} in {years} years
+      </p>
 
       <Line data={data} options={options} />
     </>
