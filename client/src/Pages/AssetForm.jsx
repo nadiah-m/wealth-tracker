@@ -5,58 +5,88 @@ import Chart from "chart.js/auto";
 
 //individual asset to add and calculate future projections
 
-const labels = ["Year 0", "Year 1", "Year 2", "Year 3", "Year 4"];
-const data = {
-  labels: labels,
-  datasets: [
-    {
-      label: "Future Value",
-      data: [1000, 1050, 1500, 1900, 2400],
-      fill: false,
-      borderColor: "rgb(53, 162, 235)",
-      backgroundColor: "rgba(53, 162, 235, 0.5)",
-      pointBorderWidth: 5,
-      pointRadius: 8,
-      // tension: 0.1,
-    },
-    {
-      label: "Total Contribution",
-      data: [1000, 1200, 1400, 1600, 1800],
-      fill: false,
-      borderColor: "rgb(255, 99, 132)",
-      backgroundColor: "rgba(255, 99, 132, 0.5)",
-      pointBorderWidth: 5,
-      pointRadius: 8,
-      tension: 0.4,
-    },
-  ],
-};
-
-const options = {
-  layout: { padding: 80 },
-  scales: {
-    y: {
-      ticks: {
-        font: {
-          size: 18,
-        },
-      },
-    },
-    x: {
-      ticks: {
-        font: { size: 18 },
-      },
-    },
-  },
-};
-
 function AssetForm() {
   const [assetName, setAssetName] = useState("");
-  const [frequency, setFrequency] = useState("Annually");
+  const [frequency, setFrequency] = useState(1);
   const [initialAmt, setInitialAmt] = useState("");
   const [contrAmt, setContrAmt] = useState("");
   const [intRate, setIntRate] = useState("");
   const [years, setYears] = useState("");
+
+  const P = initialAmt;
+  const r = intRate / 100;
+  const A = contrAmt;
+  const n = frequency;
+
+  //* print out every year from 0 to t
+  const labels = [];
+
+  for (let i = 0; i <= years; i++) {
+    labels.push("Year " + i);
+  }
+
+  const futureValues = [];
+
+  for (let i = 0; i <= years; i++) {
+    let t = i;
+    let nper = 12 * t;
+    let rate = Math.pow(1 + r / n, n / 12) - 1;
+    let fRate = Math.pow(1 + rate, nper);
+    let futureValue = P * fRate + A * ((fRate - 1) / rate);
+    console.log(futureValue);
+    futureValues.push(futureValue.toFixed(2));
+  }
+
+  const presentValues = [];
+
+  for (let i = 0; i <= years; i++) {
+    let presentValue = parseInt(P) + parseInt(A * (12 * i));
+    presentValues.push(presentValue.toFixed(2));
+  }
+
+  const data = {
+    labels: labels,
+    datasets: [
+      {
+        label: "Future Value",
+        data: futureValues,
+        fill: false,
+        borderColor: "rgb(53, 162, 235)",
+        backgroundColor: "rgba(53, 162, 235, 0.5)",
+        pointBorderWidth: 5,
+        pointRadius: 8,
+        // tension: 0.1,
+      },
+      {
+        label: "Total Contribution",
+        data: presentValues,
+        fill: false,
+        borderColor: "rgb(255, 99, 132)",
+        backgroundColor: "rgba(255, 99, 132, 0.5)",
+        pointBorderWidth: 5,
+        pointRadius: 8,
+        tension: 0.4,
+      },
+    ],
+  };
+
+  const options = {
+    layout: { padding: 80 },
+    scales: {
+      y: {
+        ticks: {
+          font: {
+            size: 18,
+          },
+        },
+      },
+      x: {
+        ticks: {
+          font: { size: 18 },
+        },
+      },
+    },
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -69,9 +99,8 @@ function AssetForm() {
       years,
     };
     console.log(asset);
+    // console.log("Handlesubmit fv", futureValue);
   };
-
-  //create a formula to produce the graph
 
   return (
     <>
@@ -117,8 +146,8 @@ function AssetForm() {
             value={frequency}
             onChange={(e) => setFrequency(e.target.value)}
           >
-            <option value="annually">Annually</option>
-            <option value="monthly">Monthly</option>
+            <option value="1">Annually</option>
+            <option value="12">Monthly</option>
           </select>
           <br />
           <button>Add to financial goals</button>
