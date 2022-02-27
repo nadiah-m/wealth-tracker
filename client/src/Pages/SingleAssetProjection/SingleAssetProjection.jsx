@@ -2,10 +2,11 @@ import React from "react";
 import { useState } from "react";
 import { Line } from "react-chartjs-2";
 import Chart from "chart.js/auto";
+import AssetForm from "../../Components/AssetForm";
 
 //individual asset to add and calculate future projections
 
-function AssetForm() {
+function SingleAssetProjection(props) {
   const [assetName, setAssetName] = useState("");
   const [frequency, setFrequency] = useState(1);
   const [initialAmt, setInitialAmt] = useState("");
@@ -33,20 +34,13 @@ function AssetForm() {
     let rate = Math.pow(1 + r / n, n / 12) - 1;
     let fRate = Math.pow(1 + rate, nper);
     let futureValue = P * fRate + A * ((fRate - 1) / rate);
-    let futureValueComma = futureValue.toLocaleString("en-US", {
-      maximumFractionDigits: 2,
-    });
-    console.log(futureValueComma);
     futureValues.push(futureValue.toFixed(2));
   }
-
-  console.log(futureValues);
 
   const finalFutureValue = Number(futureValues[futureValues.length - 1]);
   const finalFVNr = finalFutureValue.toLocaleString("en-US", {
     maximumFractionDigits: 2,
   });
-  console.log(finalFVNr);
 
   const presentValues = [];
 
@@ -64,8 +58,8 @@ function AssetForm() {
         fill: false,
         borderColor: "rgb(53, 162, 235)",
         backgroundColor: "rgba(53, 162, 235, 0.5)",
-        pointBorderWidth: 5,
-        pointRadius: 8,
+        pointBorderWidth: 3,
+        pointRadius: 5,
         // tension: 0.1,
       },
       {
@@ -74,8 +68,8 @@ function AssetForm() {
         fill: false,
         borderColor: "rgb(255, 99, 132)",
         backgroundColor: "rgba(255, 99, 132, 0.5)",
-        pointBorderWidth: 5,
-        pointRadius: 8,
+        pointBorderWidth: 3,
+        pointRadius: 5,
         tension: 0.4,
       },
     ],
@@ -108,66 +102,33 @@ function AssetForm() {
       intRate,
       frequency,
       years,
+      futureValues,
     };
-    console.log(asset);
-    // console.log("Handlesubmit fv", futureValue);
+    props.addAssets(asset);
+    // console.log(asset);
   };
 
   return (
     <>
-      <form onSubmit={handleSubmit}>
-        <fieldset>
-          <label>Asset name: </label>
-          <input
-            type="text"
-            value={assetName}
-            onChange={(e) => setAssetName(e.target.value)}
-          />
-          <br />
-          <label>Initial amount: $</label>
-          <input
-            type="number"
-            value={initialAmt}
-            onChange={(e) => setInitialAmt(e.target.value)}
-          />
-          <br />
-          <label>Monthly contribution: $</label>
-          <input
-            type="number"
-            value={contrAmt}
-            onChange={(e) => setContrAmt(e.target.value)}
-          />
-          <br />
-          <label>Length of Time in Years: </label>
-          <input
-            type="number"
-            value={years}
-            onChange={(e) => setYears(e.target.value)}
-          />
-          <br />
-          <label>Estimated annual interest rate: %</label>
-          <input
-            type="number"
-            value={intRate}
-            onChange={(e) => setIntRate(e.target.value)}
-          />
-          <br />
-          <label>Compound frequency: </label>
-          <select
-            value={frequency}
-            onChange={(e) => setFrequency(e.target.value)}
-          >
-            <option value="1">Annually</option>
-            <option value="12">Monthly</option>
-          </select>
-          <br />
-          <button>Add to financial goals</button>
-        </fieldset>
-      </form>
+      <AssetForm
+        assetName={assetName}
+        initialAmt={initialAmt}
+        contrAmt={contrAmt}
+        intRate={intRate}
+        frequency={frequency}
+        years={years}
+        handleSubmit={handleSubmit}
+        setAssetName={setAssetName}
+        setInitialAmt={setInitialAmt}
+        setContrAmt={setContrAmt}
+        setYears={setYears}
+        setIntRate={setIntRate}
+        setFrequency={setFrequency}
+      />
 
       <p>
         Based on your compounding schedule and estimated interest rate, you will
-        have ${finalFVNr} in {years} years
+        have ${finalFVNr} in {years} years from {assetName}.
       </p>
 
       <Line data={data} options={options} />
@@ -175,4 +136,4 @@ function AssetForm() {
   );
 }
 
-export default AssetForm;
+export default SingleAssetProjection;
