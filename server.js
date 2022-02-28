@@ -6,6 +6,7 @@ const express = require("express");
 const session = require("express-session");
 const mongoose = require("mongoose");
 const userController = require("./controllers/usersController");
+const assetProjectionController = require("./controllers/assetProjectionController")
 
 //* config
 const app = express();
@@ -39,7 +40,8 @@ app.use(
 );
 
 //* middleware for routes
-app.use("api/users", userController);
+app.use("/api/users", userController);
+app.use("/api/assetprojections", assetProjectionController)
 
 //* routes
 app.use("/api/test", (req, res) => {
