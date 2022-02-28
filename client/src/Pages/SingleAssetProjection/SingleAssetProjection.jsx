@@ -28,6 +28,9 @@ function SingleAssetProjection(props) {
 
   const futureValues = [];
 
+  //max no of years of savings
+  //if years< no of savings => amt will be previous value * interest rate 
+
   for (let i = 0; i <= years; i++) {
     let t = i;
     let nper = 12 * t;
@@ -110,6 +113,11 @@ function SingleAssetProjection(props) {
 
   return (
     <>
+    How many years are you saving for?
+<form>
+
+</form>
+
       <AssetForm
         assetName={assetName}
         initialAmt={initialAmt}

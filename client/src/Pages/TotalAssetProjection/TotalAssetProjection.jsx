@@ -5,17 +5,42 @@ import Chart from "chart.js/auto";
 function TotalAssetProjection(props) {
   console.log(props.assets);
 
-  //graph with all assets selected
+  const totalArr = [];
 
-  //array of objects of individual assets
+  const total = props.assets.map((asset) => totalArr.push(asset.futureValues));
 
-  //const assets = [{},{},{}]
+  //[1,2,3], [2,3,4], [2,5,3,6,8]
+
+  //
+
+  const newTotalArr = [];
+  totalArr.forEach((arr) => {
+    arr.forEach((num, index) => {
+      if (newTotalArr[index]) {
+        newTotalArr[index] += Number(num);
+      } else {
+        newTotalArr[index] = Number(num);
+      }
+    });
+  });
+
+  console.log(newTotalArr);
 
   const labels = [];
 
   for (let i = 0; i <= 20; i++) {
     labels.push("Year " + i);
   }
+
+  const totalData = {
+    label: "Total Future Savings",
+    data: newTotalArr,
+    fill: false,
+    borderColor: "rgb(53, 162, 235)",
+    backgroundColor: "rgba(53, 162, 235, 0.5)",
+    pointBorderWidth: 3,
+    pointRadius: 5,
+  };
 
   const dataAssets = props.assets.map((asset) => ({
     label: asset.assetName,
@@ -27,12 +52,12 @@ function TotalAssetProjection(props) {
     pointRadius: 5,
   }));
 
-  console.log("dataAssets", dataAssets);
-
   const data = {
     labels: labels,
     datasets: dataAssets,
   };
+
+  data.datasets.push(totalData);
 
   const options = {
     layout: { padding: 80 },
