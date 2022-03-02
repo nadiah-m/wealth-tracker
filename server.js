@@ -3,10 +3,9 @@ require("dotenv").config();
 const { urlencoded } = require("express");
 const path = require("path");
 const express = require("express");
-const session = require("express-session");
 const mongoose = require("mongoose");
 const userController = require("./controllers/usersController");
-const assetProjectionController = require("./controllers/assetProjectionController")
+const assetProjectionController = require("./controllers/assetProjectionController");
 
 //* config
 const app = express();
@@ -31,13 +30,7 @@ app.use(express.static(path.join(__dirname, "./client/build")));
 app.use(express.json());
 app.use(urlencoded({ extended: false }));
 
-app.use(
-  session({
-    secret: process.env.SECRET,
-    resave: false,
-    saveUninitialized: false,
-  })
-);
+
 
 //* middleware for routes
 app.use("/api/users", userController);
