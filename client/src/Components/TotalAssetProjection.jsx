@@ -9,10 +9,6 @@ function TotalAssetProjection(props) {
 
   const total = props.assets.map((asset) => totalArr.push(asset.futureValues));
 
-  //[1,2,3], [2,3,4], [2,5,3,6,8]
-
-  //
-
   const newTotalArr = [];
   totalArr.forEach((arr) => {
     arr.forEach((num, index) => {
