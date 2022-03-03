@@ -15,6 +15,11 @@ function Home() {
     console.log(allAssets);
   }, []);
 
+  const handleDelete = async (assetid) => {
+    axios.delete(`/api/assets/:assetid`);
+    setAllAssets(allAssets.filter((asset) => asset._id !== assetid));
+  };
+
   return (
     <>
       Dashboard of current assets and liabilities
@@ -28,6 +33,10 @@ function Home() {
           <p>Asset Type: {asset.assetType}</p>
           <p>Market Value: ${asset.valueAmt}</p>
           <p>Date: {asset.date}</p>
+          <Link to={`/assets/${asset._id}/edit`}>
+            <button>Edit</button>
+          </Link>
+          <button onClick={() => handleDelete(asset._id)}>Delete</button>
         </div>
       ))}
     </>

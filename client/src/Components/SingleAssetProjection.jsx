@@ -2,7 +2,7 @@ import React from "react";
 import { useState } from "react";
 import { Line } from "react-chartjs-2";
 import Chart from "chart.js/auto";
-import AssetForm from "./AssetForm";
+import AssetForm from "./AssetProjectionForm";
 
 //individual asset to add and calculate future projections
 

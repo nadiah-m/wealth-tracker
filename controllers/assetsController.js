@@ -70,7 +70,7 @@ router.get("/", async (req, res) => {
 });
 
 //* create new asset
-router.post("/new", isAuth, async (req, res) => {
+router.post("/new", async (req, res) => {
   const newAsset = {
     assetName: req.body.assetName,
     assetType: req.body.assetType,
@@ -83,6 +83,52 @@ router.post("/new", isAuth, async (req, res) => {
       status: "ok",
       message: "created new asset",
       data: createdNewAsset,
+    });
+  } catch (error) {
+    res.json({ status: "not ok", message: error.message });
+  }
+});
+
+//* get individual asset
+router.get("/:assetid", async (req, res) => {
+  const { assetid } = req.params;
+  try {
+    const foundAsset = await Asset.findById(assetid);
+    res.status(200).json({
+      status: "ok",
+      message: "get individual asset",
+      data: foundAsset,
+    });
+  } catch (error) {
+    res.json({ status: "not ok", message: error.message });
+  }
+});
+
+//* edit asset
+router.put("/:assetid", async (req, res) => {
+  const { assetid } = req.params;
+  const changedAsset = req.body;
+  try {
+    const editedAsset = await Asset.findByIdAndUpdate(assetid, changedAsset, {
+      new: true,
+    });
+    res
+      .status(200)
+      .json({ status: "ok", message: "edited asset", data: editedAsset });
+  } catch (error) {
+    res.json({ status: "not ok", message: error.message });
+  }
+});
+
+//* delete asset
+router.delete("/:assetid", async (req, res) => {
+  const { assetid } = req.params;
+  try {
+    const deletedAsset = await Asset.findByIdAndDelete(assetid);
+    res.status(200).json({
+      status: "ok",
+      message: "deleted asset",
+      data: deletedAsset,
     });
   } catch (error) {
     res.json({ status: "not ok", message: error.message });

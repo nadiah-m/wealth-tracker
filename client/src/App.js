@@ -7,6 +7,7 @@ import Home from "./Pages/Home/Home";
 import { SignInForm } from "./Pages/SignInForm";
 import { SignUpForm } from "./Pages/SignUpForm";
 import { NewAssetForm } from "./Pages/NewAssetForm";
+import { EditAssetForm } from "./Pages/EditAssetForm";
 
 export const UserContext = createContext();
 
@@ -47,6 +48,7 @@ function App() {
             <Route path="/signin" element={<SignInForm />} />
             <Route path="/signup" element={<SignUpForm />} />
             <Route path="/assets/new" element={<NewAssetForm />} />
+            <Route path="/assets/:assetid/edit" element={<EditAssetForm />} />
           </Routes>
         </main>
       </div>
