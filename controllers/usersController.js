@@ -47,6 +47,7 @@ router.post("/signup", async (req, res) => {
   try {
     const createdUser = await User.create(req.body);
     const token = createToken(createdUser._id);
+    res.cookie("jwt", token, { httpOnly: true, maxAge: 1800 });
     res.json({
       status: "ok",
       message: "user created",
@@ -67,12 +68,37 @@ router.get("/allusername", async (req, res) => {
       usernameMap.push({
         username: user.username,
         userid: user._id,
+        email: user.email,
       });
       return usernameMap;
     });
     res
       .status(200)
       .json({ status: "ok", message: "get all username", data: usernameMap });
+  } catch (error) {
+    res.json({ status: "not ok", message: error.message });
+  }
+});
+
+//* log in
+router.post("/login", async (req, res) => {
+  try {
+    const foundUser = await User.findOne({ username: req.body.username });
+
+    if (!foundUser) {
+      res.json({
+        status: "not ok",
+        message: "No User Found. Please login with the correct username",
+      });
+    } else {
+      if (bcrypt.compareSync(req.body.password, foundUser.password)) {
+        const token = createToken(foundUser._id);
+        res.cookie("jwt", token, { httpOnly: true, maxAge: 1800 });
+        res.json({ status: "ok", message: "user found", data: foundUser });
+      } else {
+        res.json({ status: "not ok", message: "Password Does Not Match" });
+      }
+    }
   } catch (error) {
     res.json({ status: "not ok", message: error.message });
   }

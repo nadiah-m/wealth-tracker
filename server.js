@@ -4,6 +4,7 @@ const { urlencoded } = require("express");
 const path = require("path");
 const express = require("express");
 const mongoose = require("mongoose");
+const cookieParser = require("cookie-parser");
 const userController = require("./controllers/usersController");
 const assetProjectionController = require("./controllers/assetProjectionController");
 
@@ -29,12 +30,11 @@ mongoose.connection.once("open", () => {
 app.use(express.static(path.join(__dirname, "./client/build")));
 app.use(express.json());
 app.use(urlencoded({ extended: false }));
-
-
+app.use(cookieParser());
 
 //* middleware for routes
 app.use("/api/users", userController);
-app.use("/api/assetprojections", assetProjectionController)
+app.use("/api/assetprojections", assetProjectionController);
 
 //* routes
 app.use("/api/test", (req, res) => {
