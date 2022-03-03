@@ -7,6 +7,7 @@ const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
 const userController = require("./controllers/usersController");
 const assetProjectionController = require("./controllers/assetProjectionController");
+const assetController = require("./controllers/assetsController");
 
 //* config
 const app = express();
@@ -35,6 +36,7 @@ app.use(cookieParser());
 //* middleware for routes
 app.use("/api/users", userController);
 app.use("/api/assetprojections", assetProjectionController);
+app.use("/api/assets", assetController);
 
 //* routes
 app.use("/api/test", (req, res) => {

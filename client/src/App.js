@@ -6,6 +6,7 @@ import AssetProjection from "./Pages/AssetProjection/AssetProjection";
 import Home from "./Pages/Home/Home";
 import { SignInForm } from "./Pages/SignInForm";
 import { SignUpForm } from "./Pages/SignUpForm";
+import { NewAssetForm } from "./Pages/NewAssetForm";
 
 export const UserContext = createContext();
 
@@ -45,6 +46,7 @@ function App() {
             />
             <Route path="/signin" element={<SignInForm />} />
             <Route path="/signup" element={<SignUpForm />} />
+            <Route path="/assets/new" element={<NewAssetForm />} />
           </Routes>
         </main>
       </div>
