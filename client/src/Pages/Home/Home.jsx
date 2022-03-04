@@ -23,7 +23,6 @@ function Home() {
     setAllAssets(allAssets.filter((asset) => asset._id !== assetid));
   };
 
-
   return (
     <>
       Dashboard of current assets and liabilities
@@ -35,10 +34,16 @@ function Home() {
         <div key={index}>
           <p>Asset Name: {asset.assetName}</p>
           <p>Asset Type: {asset.assetType}</p>
-          <p>Market Value: ${asset.valueAmt}</p>
-          <p>Date: {dayjs(asset.date).format('DD/MM/YYYY')}</p>
+          {/* <p>Market Value: ${asset.valueAmt}</p>
+          <p>Date: {dayjs(asset.date).format("DD/MM/YYYY")}</p> */}
           <Link to={`/assets/${asset._id}/edit`}>
-            <button>Update</button>
+            <button>Edit Asset</button>
+          </Link>
+          <Link to={`/assets/${asset._id}/updateAmt`}>
+            <button>Update Amount</button>
+          </Link>
+          <Link to={`/assets/${asset._id}`}>
+            <button>View Asset</button>
           </Link>
           <button onClick={() => handleDelete(asset._id)}>Delete</button>
         </div>

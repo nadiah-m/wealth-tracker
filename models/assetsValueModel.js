@@ -1,14 +1,13 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const assetSchema = Schema({
-  assetName: { type: String, required: true },
-  assetType: { type: String, required: true },
+const assetValueSchema = Schema({
+  asset: { type: Schema.Types.ObjectId, ref: "AssetName" },
   valueAmt: { type: Number, required: true },
   date: { type: Date },
   user: { type: Schema.Types.ObjectId, ref: "User" },
 });
 
-const Asset = mongoose.model("Asset", assetSchema);
+const AssetValue = mongoose.model("AssetValue", assetValueSchema);
 
-module.exports = Asset;
+module.exports = AssetValue;
