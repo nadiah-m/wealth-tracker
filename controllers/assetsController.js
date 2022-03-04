@@ -61,11 +61,14 @@ const isAuth = (req, res, next) => {
 //*get all assets
 router.get("/", async (req, res) => {
   try {
-    const allAssetsName = await AssetName.find({});
+    const allAssets = await AssetName.find({})
+      .populate("assetvalue")
+      
+
     res.status(200).json({
       status: "ok",
       message: "get all assets name",
-      data: allAssetsName,
+      data: { allAssets },
     });
   } catch (error) {
     res.json({ status: "not ok", message: error.message });
@@ -78,10 +81,7 @@ router.post("/new", async (req, res) => {
     assetName: req.body.assetName,
     assetType: req.body.assetType,
   };
-  // const newValueAmt = {
-  //   valueAmt: req.body.valueAmt,
-  //   date: req.body.date,
-  // };
+
   try {
     const createdNewAsset = await AssetName.create(newAssetName);
     const newValueAmt = {
@@ -130,7 +130,9 @@ router.get("/:assetid", async (req, res) => {
   const { assetid } = req.params;
   try {
     const assetName = await AssetName.findById(assetid);
-    const assetValue = await AssetValue.find({ asset: assetid }).sort({date:1});
+    const assetValue = await AssetValue.find({ asset: assetid }).sort({
+      date: -1,
+    });
     res.status(200).json({
       status: "ok",
       message: "get individual asset",

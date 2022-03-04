@@ -52,7 +52,7 @@ export const UpdateAssetAmt = () => {
           type="date"
           name="date"
           id="date"
-          defaultValue={date(currentAsset?.assetValue?.[0].date)}
+          defaultValue={date(currentAsset?.assetValue?.[0]?.date)}
         />
         <br />
         <button type="submit">Update Amount</button>
