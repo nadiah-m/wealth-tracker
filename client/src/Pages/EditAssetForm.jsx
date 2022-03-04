@@ -2,6 +2,7 @@ import React from "react";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate, Link, useParams } from "react-router-dom";
+import dayjs from "dayjs";
 
 export const EditAssetForm = () => {
   const navigate = useNavigate();
@@ -12,7 +13,7 @@ export const EditAssetForm = () => {
   useEffect(() => {
     const fetchCurrentAsset = async () => {
       const fetchedAsset = await axios.get(`/api/assets/${assetid}`);
-      setCurrentAsset(fetchedAsset.data.data);
+      setCurrentAsset(fetchedAsset?.data?.data);
     };
     fetchCurrentAsset();
   }, [assetid]);
@@ -28,6 +29,10 @@ export const EditAssetForm = () => {
 
     await axios.put(`/api/assets/${assetid}`, editedAsset);
     navigate(-1, { replace: true });
+  };
+
+  let date = (assetDate) => {
+    return dayjs(assetDate).format("YYYY-MM-DD");
   };
 
   return (
@@ -66,7 +71,7 @@ export const EditAssetForm = () => {
           name="date"
           id="date"
           //*resolve date
-          // defaultValue={currentAsset.date}
+          defaultValue={date(currentAsset?.date)}
         />
         <button type="submit">Update Asset</button>
       </form>

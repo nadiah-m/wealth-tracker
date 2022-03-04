@@ -1,6 +1,5 @@
-
 import axios from "axios";
-import { Link, useNavigate, } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export const NewAssetForm = () => {
   const navigate = useNavigate();
@@ -27,10 +26,10 @@ export const NewAssetForm = () => {
         <br />
         <label htmlFor="assetType"> Type: </label>
         <select id="assetType" name="assetType">
-          <option value="general">General</option>
-          <option value="stock">Stock</option>
-          <option value="bond">Bond</option>
-          <option value="cpf">CPF</option>
+          <option value="General">General</option>
+          <option value="Stock">Stock</option>
+          <option value="Bond">Bond</option>
+          <option value="CPF">CPF</option>
         </select>
         <br />
         <label> Market value: $</label>

@@ -5,7 +5,7 @@ const assetSchema = Schema({
   assetName: { type: String, required: true },
   assetType: { type: String, required: true },
   valueAmt: { type: Number, required: true },
-  date: { type: Date, default: Date.now },
+  date: { type: Date },
   user: { type: Schema.Types.ObjectId, ref: "User" },
 });
 

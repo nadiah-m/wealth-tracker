@@ -2,6 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { NavLink, Link } from "react-router-dom";
 import { NewAssetForm } from "../NewAssetForm";
+import dayjs from "dayjs";
 
 function Home() {
   const [allAssets, setAllAssets] = useState([]);
@@ -12,13 +13,16 @@ function Home() {
       setAllAssets(Assets?.data?.data);
     };
     fetchAllAssets();
-    console.log(allAssets);
   }, []);
 
   const handleDelete = async (assetid) => {
-    axios.delete(`/api/assets/:assetid`);
+    await axios
+      .delete(`/api/assets/${assetid}`)
+      .then((response) => console.log(response.data.message));
+
     setAllAssets(allAssets.filter((asset) => asset._id !== assetid));
   };
+
 
   return (
     <>
@@ -32,9 +36,9 @@ function Home() {
           <p>Asset Name: {asset.assetName}</p>
           <p>Asset Type: {asset.assetType}</p>
           <p>Market Value: ${asset.valueAmt}</p>
-          <p>Date: {asset.date}</p>
+          <p>Date: {dayjs(asset.date).format('DD/MM/YYYY')}</p>
           <Link to={`/assets/${asset._id}/edit`}>
-            <button>Edit</button>
+            <button>Update</button>
           </Link>
           <button onClick={() => handleDelete(asset._id)}>Delete</button>
         </div>
