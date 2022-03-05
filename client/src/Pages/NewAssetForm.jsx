@@ -30,6 +30,7 @@ export const NewAssetForm = () => {
           <option value="Stock">Stock</option>
           <option value="Bond">Bond</option>
           <option value="CPF">CPF</option>
+          <option value="Property">Property</option>
         </select>
         <br />
         <label> Market value: $</label>

@@ -26,7 +26,7 @@ export const EditAssetForm = () => {
       assetName: e.target.assetName.value,
       assetType: e.target.assetType.value,
     };
-   
+
     await axios.put(`/api/assets/${assetid}`, editedAssetName);
     navigate(-1, { replace: true });
   };
@@ -50,11 +50,16 @@ export const EditAssetForm = () => {
 
         <br />
         <label htmlFor="assetType"> Type: </label>
-        <select id="assetType" name="assetType" value={currentAsset?.assetName?.assetType}>
+        <select
+          id="assetType"
+          name="assetType"
+          value={currentAsset?.assetName?.assetType}
+        >
           <option value="General">General</option>
           <option value="Stock">Stock</option>
           <option value="Bond">Bond</option>
           <option value="CPF">CPF</option>
+          <option value="Property">Property</option>
         </select>
         <br />
         {/* <label> Market value: $</label>
