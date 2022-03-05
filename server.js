@@ -8,6 +8,7 @@ const cookieParser = require("cookie-parser");
 const userController = require("./controllers/usersController");
 const assetProjectionController = require("./controllers/assetProjectionController");
 const assetController = require("./controllers/assetsController");
+const liabilityController = require("./controllers/liabilitiesController");
 
 //* config
 const app = express();
@@ -37,6 +38,7 @@ app.use(cookieParser());
 app.use("/api/users", userController);
 app.use("/api/assetprojections", assetProjectionController);
 app.use("/api/assets", assetController);
+app.use("/api/liabilities", liabilityController);
 
 //* routes
 app.use("/api/test", (req, res) => {

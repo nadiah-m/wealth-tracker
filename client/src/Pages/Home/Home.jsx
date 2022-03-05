@@ -1,7 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { NavLink, Link } from "react-router-dom";
-import { NewAssetForm } from "../NewAssetForm";
 import dayjs from "dayjs";
 import Chart from "chart.js/auto";
 import { Pie } from "react-chartjs-2";
@@ -9,16 +8,30 @@ import "./Home.css";
 
 function Home() {
   const [allAssets, setAllAssets] = useState([]);
+  const [allLiabilities, setAllLiabilites] = useState([]);
+
+  const fetchAllAssets = async () => {
+    const Assets = await axios.get("/api/assets");
+    setAllAssets(Assets?.data?.data?.allAssets);
+  };
+
+  const fetchAllLiabilities = async () => {
+    const Liabilities = await axios.get("/api/liabilities");
+    setAllLiabilites(Liabilities?.data?.data?.allLiabilities);
+  };
 
   useEffect(() => {
-    const fetchAllAssets = async () => {
-      const Assets = await axios.get("/api/assets");
-      setAllAssets(Assets?.data?.data?.allAssets);
-    };
+    // const fetchAllAssets = async () => {
+    //   const Assets = await axios.get("/api/assets");
+    //   setAllAssets(Assets?.data?.data?.allAssets);
+    // };
     fetchAllAssets();
+    fetchAllLiabilities();
   }, []);
 
-  console.log("help", allAssets);
+  console.log("allassets", allAssets);
+  console.log("allliabilities", allLiabilities);
+
   const handleDelete = async (assetid) => {
     await axios
       .delete(`/api/assets/${assetid}`)
@@ -40,25 +53,16 @@ function Home() {
   });
   console.log(assetTypeAmt);
 
-  const labels = [];
+  const assetlabels = [];
 
-  const typeAmt = [];
+  const assettypeAmt = [];
 
   const color = [];
 
-  //assetTypeAmt = {
-  //Stock: num,
-  //Bond: num,
-  //Property: num
-  //}
-
   for (const type in assetTypeAmt) {
-    labels.push(type);
-    typeAmt.push(assetTypeAmt[type]);
+    assetlabels.push(type);
+    assettypeAmt.push(assetTypeAmt[type]);
   }
-
-  console.log("labels", labels);
-  console.log("amt", typeAmt);
 
   const CHART_COLORS = [
     "rgb(255, 99, 132)",
@@ -70,17 +74,16 @@ function Home() {
     "rgb(201, 203, 207)",
   ];
 
-  for (let i = 0; i < labels.length; i++) {
+  for (let i = 0; i < assetlabels.length; i++) {
     color.push(CHART_COLORS[i]);
-    console.log(color);
   }
 
-  const data = {
-    labels: labels,
+  const assetdata = {
+    labels: assetlabels,
     datasets: [
       {
         label: "Assets",
-        data: typeAmt,
+        data: assettypeAmt,
         backgroundColor: color,
       },
     ],
@@ -95,7 +98,7 @@ function Home() {
       Dashboard of current assets and liabilities
       <h3>Assets</h3>
       <div className="Pie">
-        <Pie data={data} options={options} />
+        <Pie data={assetdata} options={options} />
       </div>
       <Link to={"/assets/new"}>
         <button>Add Asset</button>
@@ -124,6 +127,17 @@ function Home() {
             <button>View Asset</button>
           </Link>
           <button onClick={() => handleDelete(asset?._id)}>Delete</button>
+        </div>
+      ))}
+      <h3>Liabilities</h3>
+      <Link to={"/liabilities/new"}>
+        <button>Add Liability</button>
+      </Link>
+      {allLiabilities?.map((liability, index) => (
+        <div key={index}>
+          <p>Liability name: {liability?.liabilityName}</p>
+          <p>Liability Type: {liability?.liabilityType}</p>
+          <p>Amount: $ {Number(liability?.liabilityvalue?.slice(-1)[0]?.valueAmt).toLocaleString()}</p>
         </div>
       ))}
     </>

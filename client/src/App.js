@@ -10,6 +10,7 @@ import { NewAssetForm } from "./Pages/NewAssetForm";
 import { EditAssetForm } from "./Pages/EditAssetForm";
 import { UpdateAssetAmt } from "./Pages/UpdateAssetAmt";
 import { AssetDetails } from "./Pages/AssetDetails";
+import { NewLiabilityForm } from "./Pages/NewLiabilityForm";
 
 export const UserContext = createContext();
 
@@ -56,6 +57,7 @@ function App() {
               element={<UpdateAssetAmt />}
             />
             <Route path="/assets/:assetid/" element={<AssetDetails />} />
+            <Route path="/liabilities/new" element={<NewLiabilityForm />} />
           </Routes>
         </main>
       </div>
