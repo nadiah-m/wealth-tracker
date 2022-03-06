@@ -143,7 +143,12 @@ function Home() {
               liability?.liabilityvalue?.slice(-1)[0]?.valueAmt
             ).toLocaleString()}
           </p>
-
+          <p>
+            Date:{" "}
+            {dayjs(liability?.liabilityvalue?.slice(-1)[0]?.date).format(
+              "DD/MM/YYYY"
+            )}
+          </p>
           <Link to={`/liabilities/${liability?._id}/edit`}>
             <button>Edit Liability</button>
           </Link>
