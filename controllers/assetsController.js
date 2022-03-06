@@ -61,9 +61,7 @@ const isAuth = (req, res, next) => {
 //*get all assets
 router.get("/", async (req, res) => {
   try {
-    const allAssets = await AssetName.find({})
-      .populate("assetvalue")
-      
+    const allAssets = await AssetName.find({}).populate("assetvalue");
 
     res.status(200).json({
       status: "ok",
@@ -171,10 +169,11 @@ router.delete("/:assetid", async (req, res) => {
   const { assetid } = req.params;
   try {
     const deletedAsset = await AssetName.findByIdAndDelete(assetid);
+    const deleteAssetValue = await AssetValue.deleteMany({ asset: assetid });
     res.status(200).json({
       status: "ok",
       message: "deleted asset",
-      data: deletedAsset,
+      data: { deletedAsset, deleteAssetValue },
     });
   } catch (error) {
     res.json({ status: "not ok", message: error.message });
