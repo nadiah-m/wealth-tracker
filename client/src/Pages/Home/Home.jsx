@@ -137,7 +137,16 @@ function Home() {
         <div key={index}>
           <p>Liability name: {liability?.liabilityName}</p>
           <p>Liability Type: {liability?.liabilityType}</p>
-          <p>Amount: $ {Number(liability?.liabilityvalue?.slice(-1)[0]?.valueAmt).toLocaleString()}</p>
+          <p>
+            Amount: ${" "}
+            {Number(
+              liability?.liabilityvalue?.slice(-1)[0]?.valueAmt
+            ).toLocaleString()}
+          </p>
+
+          <Link to={`/liabilities/${liability?._id}/edit`}>
+            <button>Edit Liability</button>
+          </Link>
         </div>
       ))}
     </>
