@@ -8,7 +8,7 @@ import "./Home.css";
 
 function Home() {
   const [allAssets, setAllAssets] = useState([]);
-  const [allLiabilities, setAllLiabilites] = useState([]);
+  const [allLiabilities, setAllLiabilities] = useState([]);
 
   const fetchAllAssets = async () => {
     const Assets = await axios.get("/api/assets");
@@ -17,14 +17,10 @@ function Home() {
 
   const fetchAllLiabilities = async () => {
     const Liabilities = await axios.get("/api/liabilities");
-    setAllLiabilites(Liabilities?.data?.data?.allLiabilities);
+    setAllLiabilities(Liabilities?.data?.data?.allLiabilities);
   };
 
   useEffect(() => {
-    // const fetchAllAssets = async () => {
-    //   const Assets = await axios.get("/api/assets");
-    //   setAllAssets(Assets?.data?.data?.allAssets);
-    // };
     fetchAllAssets();
     fetchAllLiabilities();
   }, []);
@@ -32,14 +28,23 @@ function Home() {
   console.log("allassets", allAssets);
   console.log("allliabilities", allLiabilities);
 
-  const handleDelete = async (assetid) => {
+  const handleDeleteAsset = async (assetid) => {
     await axios
       .delete(`/api/assets/${assetid}`)
-      .then((response) => console.log(response.data.message));
+      .then((response) => console.log(response?.data?.message));
 
     setAllAssets(allAssets.filter((asset) => asset._id !== assetid));
   };
 
+  const handleDeleteLiability = async (liabilityid) => {
+    await axios
+      .delete(`/api/liabilities/${liabilityid}`)
+      .then((response) => console.log(response?.date?.message));
+
+    setAllLiabilities(
+      allLiabilities.filter((liability) => liability._id !== liabilityid)
+    );
+  };
   let assetTypeAmt = {};
 
   allAssets.forEach((asset) => {
@@ -126,7 +131,7 @@ function Home() {
           <Link to={`/assets/${asset?._id}`}>
             <button>View Asset</button>
           </Link>
-          <button onClick={() => handleDelete(asset?._id)}>Delete</button>
+          <button onClick={() => handleDeleteAsset(asset?._id)}>Delete</button>
         </div>
       ))}
       <h3>Liabilities</h3>
@@ -152,6 +157,15 @@ function Home() {
           <Link to={`/liabilities/${liability?._id}/edit`}>
             <button>Edit Liability</button>
           </Link>
+          <Link to={`/liabilities/${liability?._id}/updateAmt`}>
+            <button>Update Amount</button>
+          </Link>
+          <Link to={`/liabilities/${liability?._id}`}>
+            <button>View Liability</button>
+          </Link>
+          <button onClick={() => handleDeleteLiability(liability?._id)}>
+            Delete
+          </button>
         </div>
       ))}
     </>

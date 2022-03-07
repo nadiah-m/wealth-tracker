@@ -62,22 +62,7 @@ export const EditAssetForm = () => {
           <option value="Property">Property</option>
         </select>
         <br />
-        {/* <label> Market value: $</label>
-        <input
-          type="number"
-          name="valueAmt"
-          id="valueAmt"
-          defaultValue={currentAsset.valueAmt}
-        />
-        <br />
-        <label> Date</label>
-        <input
-          type="date"
-          name="date"
-          id="date"
-          //*resolve date
-          defaultValue={date(currentAsset?.date)}
-        /> */}
+
         <button type="submit">Update Asset</button>
       </form>
     </div>

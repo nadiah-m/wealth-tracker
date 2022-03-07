@@ -12,6 +12,8 @@ import { UpdateAssetAmt } from "./Pages/UpdateAssetAmt";
 import { AssetDetails } from "./Pages/AssetDetails";
 import { NewLiabilityForm } from "./Pages/NewLiabilityForm";
 import { EditLiabilityForm } from "./Pages/EditLiabilityForm";
+import { UpdateLiabilityAmt } from "./Pages/UpdateLiabilityAmt";
+import { LiabilityDetails } from "./Pages/LiabilityDetails";
 
 export const UserContext = createContext();
 
@@ -63,6 +65,14 @@ function App() {
               element={<EditLiabilityForm />}
             />
             <Route path="/liabilities/new" element={<NewLiabilityForm />} />
+            <Route
+              path="/liabilities/:liabilityid/updateAmt"
+              element={<UpdateLiabilityAmt />}
+            />
+            <Route
+              path="/liabilities/:liabilityid"
+              element={<LiabilityDetails />}
+            />
           </Routes>
         </main>
       </div>
