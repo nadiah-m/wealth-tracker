@@ -5,8 +5,10 @@ import dayjs from "dayjs";
 import Chart from "chart.js/auto";
 import { Pie } from "react-chartjs-2";
 import "./Home.css";
+import ChartDataLabels from "chartjs-plugin-datalabels";
 
 function Home() {
+  Chart.register(ChartDataLabels);
   const [allAssets, setAllAssets] = useState([]);
   const [allLiabilities, setAllLiabilities] = useState([]);
 
@@ -24,9 +26,6 @@ function Home() {
     fetchAllAssets();
     fetchAllLiabilities();
   }, []);
-
-  console.log("allassets", allAssets);
-  console.log("allliabilities", allLiabilities);
 
   const handleDeleteAsset = async (assetid) => {
     await axios
@@ -56,18 +55,53 @@ function Home() {
         asset?.assetvalue?.slice(-1)[0]?.valueAmt;
     }
   });
-  console.log(assetTypeAmt);
+
+  let liabilityTypeAmt = {};
+
+  allLiabilities.forEach((liability) => {
+    if (liabilityTypeAmt[liability?.liabilityType]) {
+      liabilityTypeAmt[liability?.liabilityType] +=
+        liability?.liabilityvalue?.slice(-1)[0]?.valueAmt;
+    } else {
+      liabilityTypeAmt[liability?.liabilityType] =
+        liability?.liabilityvalue?.slice(-1)[0]?.valueAmt;
+    }
+  });
 
   const assetlabels = [];
+  const liabilitylabels = [];
 
   const assettypeAmt = [];
+  const liabilitytypeAmt = [];
 
-  const color = [];
+  const assetColor = [];
+  const liabilityColor = [];
 
   for (const type in assetTypeAmt) {
     assetlabels.push(type);
     assettypeAmt.push(assetTypeAmt[type]);
   }
+
+  console.log("assettypeAmt", assettypeAmt);
+
+  for (const type in liabilityTypeAmt) {
+    liabilitylabels.push(type);
+    liabilitytypeAmt.push(liabilityTypeAmt[type]);
+  }
+  console.log("liabilitytypeAmt", liabilitytypeAmt);
+
+  let totalAssets = 0;
+  let totalLiabilities = 0;
+
+  assettypeAmt.forEach((asset) => (totalAssets += asset));
+  console.log(totalAssets);
+
+  liabilitytypeAmt.forEach((liability) => {
+    totalLiabilities += liability;
+    console.log(totalLiabilities);
+  });
+
+  const totalNetWorth = Number(totalAssets - totalLiabilities).toLocaleString();
 
   const CHART_COLORS = [
     "rgb(255, 99, 132)",
@@ -80,7 +114,11 @@ function Home() {
   ];
 
   for (let i = 0; i < assetlabels.length; i++) {
-    color.push(CHART_COLORS[i]);
+    assetColor.push(CHART_COLORS[i]);
+  }
+
+  for (let i = 0; i < liabilitylabels.length; i++) {
+    liabilityColor.push(CHART_COLORS[i]);
   }
 
   const assetdata = {
@@ -89,25 +127,54 @@ function Home() {
       {
         label: "Assets",
         data: assettypeAmt,
-        backgroundColor: color,
+        backgroundColor: assetColor,
+      },
+    ],
+  };
+
+  const liabilitydata = {
+    labels: liabilitylabels,
+    datasets: [
+      {
+        label: "Liability",
+        data: liabilitytypeAmt,
+        backgroundColor: liabilityColor,
       },
     ],
   };
 
   const options = {
-    layout: { padding: 20 },
+    layout: { padding: 50 },
     maintainAspectRatio: false,
+    plugins: {
+      datalabels: {
+        formatter: function (value, context) {
+          let datasets = context.chart.data.datasets;
+          if (datasets.indexOf(context.dataset) === datasets.length - 1) {
+            let sum = datasets[0].data.reduce((a, b) => a + b, 0);
+            let percentage = Math.round((value / sum) * 100) + "%";
+            return (
+              context.chart.data.labels[context.dataIndex] + " " + percentage
+            );
+          }
+        },
+      },
+    },
   };
   return (
     <>
       Dashboard of current assets and liabilities
+      <p>Your total net worth is ${totalNetWorth}</p>
       <h3>Assets</h3>
       <div className="Pie">
+        <p>Assets</p>
         <Pie data={assetdata} options={options} />
       </div>
-      <Link to={"/assets/new"}>
-        <button>Add Asset</button>
-      </Link>
+      <div className="Pie">
+        <p>Liabilities</p>
+        <Pie data={liabilitydata} options={options} />
+      </div>
+      <div></div>
       {allAssets?.map((asset, index) => (
         <div key={index}>
           <p>Asset Name: {asset?.assetName}</p>
@@ -134,6 +201,9 @@ function Home() {
           <button onClick={() => handleDeleteAsset(asset?._id)}>Delete</button>
         </div>
       ))}
+      <Link to={"/assets/new"}>
+        <button>Add Asset</button>
+      </Link>
       <h3>Liabilities</h3>
       <Link to={"/liabilities/new"}>
         <button>Add Liability</button>

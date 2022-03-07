@@ -34,8 +34,10 @@ router.get("/seed", async (req, res) => {
   }
 });
 
-const createToken = (id) => {
-  return jwt.sign({ id }, process.env.TOKEN_SECRET, { expiresIn: "1800s" });
+const createToken = (userid) => {
+  return jwt.sign({ id: userid }, process.env.TOKEN_SECRET, {
+    expiresIn: "1800s",
+  });
 };
 
 //* post sign up
@@ -47,7 +49,7 @@ router.post("/signup", async (req, res) => {
   try {
     const createdUser = await User.create(req.body);
     const token = createToken(createdUser._id);
-    res.cookie("jwt", token, { httpOnly: true, maxAge: 1800 });
+    // res.cookie("jwt", token, { httpOnly: true, maxAge: 1800 });
     res.json({
       status: "ok",
       message: "user created",
@@ -93,8 +95,12 @@ router.post("/login", async (req, res) => {
     } else {
       if (bcrypt.compareSync(req.body.password, foundUser.password)) {
         const token = createToken(foundUser._id);
-        res.cookie("jwt", token, { httpOnly: true, maxAge: 1800 });
-        res.json({ status: "ok", message: "user found", data: foundUser });
+        res.json({
+          status: "ok",
+          message: "user found",
+          data: foundUser,
+          token: token,
+        });
       } else {
         res.json({ status: "not ok", message: "Password Does Not Match" });
       }
@@ -104,4 +110,19 @@ router.post("/login", async (req, res) => {
   }
 });
 
+// const verify = (req, res, next) => {
+//   const authHeader = req.headers.authorization;
+//   if (authHeader) {
+//     const token = authHeader.split(" ")[1];
+//     jwt.verify(token, process.env.TOKEN_SECRET, (err, user) => {
+//       if (err) {
+//         return res.json({ status: "not ok", message: "Token is not valid" });
+//       }
+//       req.user = user;
+//       next();
+//     });
+//   } else {
+//     res.json({ status: "not ok", message: "Please login or sign up" });
+//   }
+// };
 module.exports = router;

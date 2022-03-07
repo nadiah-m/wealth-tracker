@@ -18,7 +18,7 @@ export const NewLiabilityForm = () => {
   };
   return (
     <>
-      <h3>Add Asset</h3>
+      <h3>Add Liability</h3>
       <Link to="/">Back to Home</Link>
       <form onSubmit={handleSubmit}>
         <label> Liability name: </label>

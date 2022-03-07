@@ -2,6 +2,8 @@ const express = require("express");
 const router = express.Router();
 const AssetValue = require("../models/assetsValueModel");
 const AssetName = require("../models/assetsNameModel");
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
 
 // //*seed assets
 // router.get("/seed", async (req, res) => {
@@ -41,20 +43,19 @@ const AssetName = require("../models/assetsNameModel");
 //   }
 // });
 
-const isAuth = (req, res, next) => {
-  const token = req.cookies.jwt;
-  if (token) {
-    jwt.verify(token, process.env.TOKEN_SECRET, (err, decodedToken) => {
+const verify = (req, res, next) => {
+  const authHeader = req.headers.authorization;
+  if (authHeader) {
+    const token = authHeader.split(" ")[1];
+    jwt.verify(token, process.env.TOKEN_SECRET, (err, user) => {
       if (err) {
-        console.log(err.message);
-        res.json({ status: "not ok", message: "please login or sign up" });
-      } else {
-        console.log(decodedToken);
-        return next();
+        return res.json({ status: "not ok", message: "Token is not valid" });
       }
+      req.user = user;
+      next();
     });
   } else {
-    res.json({ status: "not ok", message: "please login or sign up" });
+    res.json({ status: "not ok", message: "Please login or sign up" });
   }
 };
 
@@ -74,7 +75,7 @@ router.get("/", async (req, res) => {
 });
 
 //* create new asset
-router.post("/new", async (req, res) => {
+router.post("/new", verify, async (req, res) => {
   const newAssetName = {
     assetName: req.body.assetName,
     assetType: req.body.assetType,
@@ -124,7 +125,7 @@ router.post("/:assetid/updateAmt", async (req, res) => {
 });
 
 //* get individual asset
-router.get("/:assetid", async (req, res) => {
+router.get("/:assetid", verify, async (req, res) => {
   const { assetid } = req.params;
   try {
     const assetName = await AssetName.findById(assetid);
