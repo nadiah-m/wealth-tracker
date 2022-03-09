@@ -2,12 +2,15 @@ import axios from "axios";
 import { React, useContext } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { UserContext } from "../App";
+import jwt_decode from "jwt-decode";
+const axiosJWT = axios.create();
 
 export const NewAssetForm = () => {
   const navigate = useNavigate();
   // const { userID } = useParams();
   const [userContext, setUserContext] = useContext(UserContext);
 
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     const newAsset = {

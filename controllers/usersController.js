@@ -220,8 +220,6 @@ router.delete("/superadmin/:userid", isSuperadmin, async (req, res) => {
 router.get("/:userid", verify, async (req, res) => {
   const { userid } = req.params;
   const user = req.user;
-  console.log(userid);
-  console.log(user.id);
   try {
     const foundAsset = await AssetName.find({ user: userid }).populate(
       "assetvalue"

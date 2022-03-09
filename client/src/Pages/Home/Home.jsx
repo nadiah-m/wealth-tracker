@@ -1,20 +1,19 @@
 import axios from "axios";
 import { useEffect, useState, useContext } from "react";
-import { NavLink, Link, useNavigate, useParams } from "react-router-dom";
-import dayjs from "dayjs";
 import Chart from "chart.js/auto";
 import { Pie } from "react-chartjs-2";
 import "./Home.css";
 import ChartDataLabels from "chartjs-plugin-datalabels";
 import { UserContext } from "../../App";
+import "bootstrap/dist/css/bootstrap.min.css";
+import { HomeAssetTable } from "../../Components/HomeAssetTable";
+import { HomeLiabilityTable } from "../../Components/HomeLiabilityTable";
 
 function Home() {
   const [userContext, setUserContext] = useContext(UserContext);
   Chart.register(ChartDataLabels);
   const [allAssets, setAllAssets] = useState([]);
   const [allLiabilities, setAllLiabilities] = useState([]);
-
-  const [userData, setUserData] = useState([]);
 
   const fetchUserData = async () => {
     await axios({
@@ -34,6 +33,8 @@ function Home() {
       }
     });
   };
+
+  console.log(userContext);
 
   useEffect(() => {
     fetchUserData();
@@ -172,85 +173,45 @@ function Home() {
     },
   };
   return (
-    <>
-      Dashboard of current assets and liabilities
-      <p>Your total net worth is ${totalNetWorth}</p>
-      <h3>Assets</h3>
-      <div className="Pie">
-        <p>Assets</p>
-        <Pie data={assetdata} options={options} />
-      </div>
-      <div className="Pie">
-        <p>Liabilities</p>
-        <Pie data={liabilitydata} options={options} />
-      </div>
-      <p>List of Assets and Liabilities</p>
-      {allAssets.map((asset, index) => (
-        <div key={index}>
-          <p>Asset Name: {asset?.assetName}</p>
-          <p>Asset Type: {asset?.assetType}</p>
-          <p>
-            Market Value: $
-            {Number(asset?.assetvalue?.slice(-1)[0]?.valueAmt).toLocaleString(
-              "en-US"
-            )}
-          </p>
-          <p>
-            Date:{" "}
-            {dayjs(asset?.assetvalue?.slice(-1)[0]?.date).format("DD/MM/YYYY")}
-          </p>
-          <Link
-            to={`/${userContext?.data?.username}/assets/${asset?._id}/edit`}
-          >
-            <button>Edit Asset</button>
-          </Link>
-          <Link to={`/${userContext?.data?.username}/assets/${asset?._id}/updateAmt`}>
-            <button>Update Amount</button>
-          </Link>
-          <Link to={`/${userContext?.data?.username}/assets/${asset?._id}`}>
-            <button>View Asset</button>
-          </Link>
-          <button onClick={() => handleDeleteAsset(asset?._id)}>Delete</button>
+    <div className="container-fluid">
+      <div className="d-grid gap-4">
+        <div className="p-5">
+          <h4>Your total net worth is <h4 className ="fs-2">${totalNetWorth}</h4>
+          </h4>
         </div>
-      ))}
-      <Link to={`/${userContext?.data?.username}/assets/new`}>
-        <button>Add Asset</button>
-      </Link>
-      <h3>Liabilities</h3>
-      <Link to={`/${userContext?.data?.username}/liabilities/new`}>
-        <button>Add Liability</button>
-      </Link>
-      {allLiabilities.map((liability, index) => (
-        <div key={index}>
-          <p>Liability name: {liability?.liabilityName}</p>
-          <p>Liability Type: {liability?.liabilityType}</p>
-          <p>
-            Amount: ${" "}
-            {Number(
-              liability?.liabilityvalue?.slice(-1)[0]?.valueAmt
-            ).toLocaleString()}
-          </p>
-          <p>
-            Date:{" "}
-            {dayjs(liability?.liabilityvalue?.slice(-1)[0]?.date).format(
-              "DD/MM/YYYY"
-            )}
-          </p>
-          <Link to={`/${userContext?.data?.username}/liabilities/${liability?._id}/edit`}>
-            <button>Edit Liability</button>
-          </Link>
-          <Link to={`/${userContext?.data?.username}/liabilities/${liability?._id}/updateAmt`}>
-            <button>Update Amount</button>
-          </Link>
-          <Link to={`/${userContext?.data?.username}/liabilities/${liability?._id}`}>
-            <button>View Liability</button>
-          </Link>
-          <button onClick={() => handleDeleteLiability(liability?._id)}>
-            Delete
-          </button>
+        <div className="p-2">
+          <HomeAssetTable
+            allAssets={allAssets}
+            handleDeleteAsset={handleDeleteAsset}
+          />
         </div>
-      ))}
-    </>
+        <div className="p-5">
+          <HomeLiabilityTable
+            allLiabilities={allLiabilities}
+            handleDeleteLiability={handleDeleteLiability}
+          />
+        </div>
+      </div>
+      <div className="container-fluid">
+        <div className="row justify-content-center">
+          <div className="col-6">Assets</div>
+          <div className="col-6">Liabilities</div>
+        </div>
+
+        <div className="row justify-content-evenly">
+          <div className="col-6">
+            <div className="Pie">
+              <Pie data={assetdata} options={options} />
+            </div>
+          </div>
+          <div className="col-6">
+            <div className="Pie">
+              <Pie data={liabilitydata} options={options} />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
 

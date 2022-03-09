@@ -59,7 +59,6 @@ function App() {
           <Link to="/signin">Sign In</Link>
           <Link to="/signup">Sign Up</Link>
         </nav>
-        <h2>Calculate your wealth</h2>
 
         <main>
           <Routes>

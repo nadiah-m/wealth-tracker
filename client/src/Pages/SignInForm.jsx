@@ -3,10 +3,12 @@ import { useFormik, validateYupSchema } from "formik";
 import axios from "axios";
 import * as Yup from "yup";
 import { UserContext } from "../App";
+import { useNavigate } from "react-router-dom";
 
 export const SignInForm = () => {
   const [userContext, setUserContext] = useContext(UserContext);
   const [message, setMessage] = useState("");
+  const navigate = useNavigate();
 
   const validateSchema = Yup.object({
     username: Yup.string().required("Username is required"),
@@ -54,6 +56,7 @@ export const SignInForm = () => {
           // console.log(user);
           localStorage.setItem("userContext", JSON.stringify(result));
           setUserContext(result);
+          navigate(-1, { replace: true });
         }
       });
     },
