@@ -25,16 +25,7 @@ function App() {
     setAssets([...assets, asset]);
   };
 
-  // const [userContext, setUserContext] = useState({
-  //   userID: "",
-  //   username: "",
-  //   password: "",
-  //   isLoggedIn: false,
-  //   isSuperAdmin: false,
-  // });
-
-  const [userContext, setUserContext] = useState({
-  });
+  const [userContext, setUserContext] = useState({});
 
   useEffect(() => {
     const checkLocalStorage = () => {
@@ -53,11 +44,39 @@ function App() {
   return (
     <UserContext.Provider value={[userContext, setUserContext]}>
       <div className="App">
-        <nav>
-          <Link to={`/${userContext?.data?.username}`}>Home</Link>
-          <Link to="/AssetProjection">AssetProjection</Link>
-          <Link to="/signin">Sign In</Link>
-          <Link to="/signup">Sign Up</Link>
+        <nav className="navbar navbar-light bg-dark container-fluid">
+          <div className="d-flex">
+            <div className="p-2 fs-5">
+              <Link
+                className="text-decoration-none text-white"
+                to={`/${userContext?.data?.username}`}
+              >
+                Home
+              </Link>
+            </div>
+
+            <div className="p-2 fs-5">
+              <Link
+                className="text-decoration-none text-white"
+                to="/AssetProjection"
+              >
+                AssetProjection
+              </Link>
+            </div>
+
+            <div className="p-2 fs-5">
+              <Link className="text-decoration-none text-white" to="/signin">
+                Sign In
+              </Link>
+            </div>
+
+            <div className="p-2 fs-5">
+              <Link className="text-decoration-none text-white" to="/signup">
+                Sign Up
+              </Link>
+            </div>
+        
+          </div>
         </nav>
 
         <main>
