@@ -176,9 +176,11 @@ function Home() {
     <div className="container-fluid">
       <div className="d-grid gap-4">
         <div className="p-5">
-          <h4>Your total net worth is <h4 className ="fs-2">${totalNetWorth}</h4>
+          <h4>
+            Your total net worth is <h4 className="fs-2">${totalNetWorth}</h4>
           </h4>
         </div>
+
         <div className="p-2">
           <HomeAssetTable
             allAssets={allAssets}

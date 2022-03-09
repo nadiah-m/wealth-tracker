@@ -26,7 +26,7 @@ export const HomeLiabilityTable = (props) => {
           </thead>
           <tbody>
             {props.allLiabilities.map((liability, index) => (
-              <tr>
+              <tr key = {index}>
                 <th scope="row">{index + 1}</th>
                 <td>{liability?.liabilityName}</td>
                 <td>{liability?.liabilityType}</td>
@@ -70,7 +70,7 @@ export const HomeLiabilityTable = (props) => {
                       <button
                         type="button"
                         className="btn btn-secondary btn-sm"
-                        onClick={() => props.handleDeleteAsset(liability?._id)}
+                        onClick={() => props.handleDeleteLiability(liability?._id)}
                       >
                         <DeleteIcon />
                       </button>

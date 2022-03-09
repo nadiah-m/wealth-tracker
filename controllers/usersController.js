@@ -101,12 +101,12 @@ router.post("/signup", async (req, res) => {
   );
   try {
     const createdUser = await User.create(req.body);
-    const token = createAccessToken(createdUser._id);
+    const accessToken = createAccessToken(createdUser._id);
     res.json({
       status: "ok",
       message: "user created",
       data: createdUser,
-      token: token,
+      accessToken: accessToken,
     });
   } catch (error) {
     res.json({ status: "not ok", message: error.message });

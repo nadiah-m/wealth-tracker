@@ -4,10 +4,12 @@ import axios from "axios";
 import * as Yup from "yup";
 import { UserContext } from "../App";
 import { useNavigate } from "react-router-dom";
+import "./Form.css";
 
 export const SignUpForm = () => {
   const navigate = useNavigate();
   const [allUsernames, setAllUsernames] = useState([]);
+  const [message, setMessage] = useState("");
   const [userContext, setUserContext] = useContext(UserContext);
 
   useEffect(() => {
@@ -89,68 +91,103 @@ export const SignUpForm = () => {
           console.log(user);
           localStorage.setItem("userContext", JSON.stringify(user));
           setUserContext(user);
-          navigate("/", { replace: false });
+          setMessage("You have successfully signed up. Please log in");
         }
       });
     },
   });
 
   return (
-    <>
-      <h1>Sign Up</h1>
-      <form onSubmit={formik.handleSubmit}>
-        <label htmlFor="username">Username</label>
-        <input
-          id="username"
-          name="username"
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          value={formik.values.username}
-        />
-        {formik.touched?.username && formik.errors?.username ? (
-          <div>{formik.errors.username}</div>
-        ) : null}
-        <br />
-        <label htmlFor="email">Email Address</label>
-        <input
-          id="email"
-          name="email"
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          value={formik.values.email}
-        />
-        {formik.touched.email && formik.errors.email ? (
-          <div>{formik.errors.email}</div>
-        ) : null}
-        <br />
-        <label htmlFor="password">Password</label>
-        <input
-          id="password"
-          name="password"
-          type="password"
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          value={formik.values.password}
-        />
-        {formik.touched.password && formik.errors.password ? (
-          <div>{formik.errors.password}</div>
-        ) : null}
-        <br />
-        <label htmlFor="repeatPassword">Repeat Password</label>
-        <input
-          id="repeatPassword"
-          name="repeatPassword"
-          type="password"
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          value={formik.values.repeatPassword}
-        />
-        {formik.touched.repeatPassword && formik.errors.repeatPassword ? (
-          <div>{formik.errors.repeatPassword}</div>
-        ) : null}
-        <br />
-        <button type="submit">Submit</button>
-      </form>
-    </>
+    <div className="container mt-5">
+      <h4>Sign Up</h4>
+      <div className="row d-flex justify-content-center">
+        <form onSubmit={formik.handleSubmit}>
+          <div className="p-1 align-self-center mb-3">
+            <label htmlFor="username" className="form-label">
+              Username
+            </label>
+            <input
+              id="username"
+              name="username"
+              className="form-control"
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.username}
+            />
+            <div className="text-danger">
+              {formik.touched?.username && formik.errors?.username ? (
+                <div>{formik.errors.username}</div>
+              ) : null}
+            </div>
+          </div>
+          <br />
+          <div className="p-1 align-self-center mb-3">
+            <label htmlFor="email" className="form-label">
+              Email Address
+            </label>
+            <input
+              id="email"
+              name="email"
+              className="form-control"
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.email}
+            />
+            <div className="text-danger">
+              {formik.touched.email && formik.errors.email ? (
+                <div>{formik.errors.email}</div>
+              ) : null}
+            </div>
+          </div>
+          <br />
+          <div className="p-1 align-self-center mb-3">
+            <label htmlFor="password" className="form-label">
+              Password
+            </label>
+            <input
+              id="password"
+              name="password"
+              type="password"
+              className="form-control"
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.password}
+            />
+            <div className="text-danger">
+              {formik.touched.password && formik.errors.password ? (
+                <div>{formik.errors.password}</div>
+              ) : null}
+            </div>
+          </div>
+          <br />
+          <div className="p-1 align-self-center mb-3">
+            <label htmlFor="repeatPassword" className="form-label">
+              Repeat Password
+            </label>
+            <input
+              id="repeatPassword"
+              name="repeatPassword"
+              type="password"
+              className="form-control"
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.repeatPassword}
+            />
+            <div className="text-danger">
+              {formik.touched.repeatPassword && formik.errors.repeatPassword ? (
+                <div>{formik.errors.repeatPassword}</div>
+              ) : null}
+            </div>
+          </div>
+          <br />
+          <div className="d-grid col-2 mx-auto">
+            <button type="submit" className="btn btn-secondary">
+              Sign Up
+            </button>
+          </div>
+        </form>
+        <div className="text-success">{message}</div>
+      </div>
+    </div>
   );
 };

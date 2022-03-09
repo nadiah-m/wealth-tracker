@@ -4,6 +4,7 @@ import axios from "axios";
 import * as Yup from "yup";
 import { UserContext } from "../App";
 import { useNavigate } from "react-router-dom";
+import "./Form.css";
 
 export const SignInForm = () => {
   const [userContext, setUserContext] = useContext(UserContext);
@@ -41,57 +42,67 @@ export const SignInForm = () => {
           console.log("user is logged in ", result);
           const loginmsg = "You are logged in";
           setMessage(loginmsg);
-          // let user = {
-          //   userID: "",
-          //   username: "",
-          //   password: "",
-          //   isLoggedIn: true,
-          // };
-          // user = {
-          //   ...user,
-          //   userID: result._id,
-          //   username: result.username,
-          //   password: result.password,
-          // };
-          // console.log(user);
           localStorage.setItem("userContext", JSON.stringify(result));
           setUserContext(result);
-          navigate(-1, { replace: true });
+          navigate(`/${result?.data?.username}`, { replace: true });
+          console.log(result.username);
         }
       });
     },
   });
 
   return (
-    <>
-      <form onSubmit={formik.handleSubmit}>
-        <label htmlFor="username">Username</label>
-        <input
-          id="username"
-          name="username"
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          value={formik.values.username}
-        />
-        {formik.touched?.username && formik.errors?.username ? (
-          <div>{formik.errors.username}</div>
-        ) : null}
-        <br />
-        <label htmlFor="password">Password</label>
-        <input
-          id="password"
-          name="password"
-          type="password"
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          value={formik.values.password}
-        />
-        {formik.touched.password && formik.errors.password ? (
-          <div>{formik.errors.password}</div>
-        ) : null}
-        <button type="submit">Submit</button>
-      </form>
-      {message}
-    </>
+    <div className="container mt-5">
+      <h4>Log In</h4>
+      <div className="row d-flex justify-content-center">
+        <form onSubmit={formik.handleSubmit}>
+          <div className="p-5 align-self-center card">
+            <label htmlFor="username" className="form-label">
+              Username
+            </label>
+            <input
+              id="username"
+              name="username"
+              className="form-control"
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.username}
+            />
+            <div className="text-danger">
+              {formik.touched?.username && formik.errors?.username ? (
+                <div>{formik.errors.username}</div>
+              ) : null}
+            </div>
+          </div>
+          <br />
+
+          <div className="p-5 align-self-center">
+            <label htmlFor="password" className="form-label">
+              Password
+            </label>
+            <input
+              id="password"
+              name="password"
+              type="password"
+              className="form-control"
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.password}
+            />
+            <div className="text-danger">
+              {formik.touched.password && formik.errors.password ? (
+                <div>{formik.errors.password}</div>
+              ) : null}
+            </div>
+          </div>
+          <div className="d-grid col-2 mx-auto">
+            <button type="submit" className="btn btn-secondary">
+              Login
+            </button>
+          </div>
+        </form>
+        <div className="text-danger">{message}</div>
+      </div>
+    </div>
   );
 };

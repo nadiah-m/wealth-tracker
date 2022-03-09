@@ -66,7 +66,7 @@ function App() {
 
             <div className="p-2 fs-5">
               <Link className="text-decoration-none text-white" to="/signin">
-                Sign In
+                Log In
               </Link>
             </div>
 

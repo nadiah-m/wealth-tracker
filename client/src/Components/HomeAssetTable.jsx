@@ -26,7 +26,7 @@ export const HomeAssetTable = (props) => {
           </thead>
           <tbody>
             {props.allAssets.map((asset, index) => (
-              <tr>
+              <tr key = {index}>
                 <th scope="row">{index + 1}</th>
                 <td>{asset?.assetName}</td>
                 <td>{asset?.assetType}</td>
