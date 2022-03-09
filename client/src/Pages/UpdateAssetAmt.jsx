@@ -1,22 +1,37 @@
 import React from "react";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { useNavigate, Link, useParams } from "react-router-dom";
 import dayjs from "dayjs";
+import { UserContext } from "../App";
 
 export const UpdateAssetAmt = () => {
+  const [userContext, setUserContext] = useContext(UserContext);
+
   const navigate = useNavigate();
 
   const { assetid } = useParams();
   const [currentAsset, setCurrentAsset] = useState({});
 
+  const fetchCurrentAsset = async () => {
+    await axios({
+      method: "get",
+      url: `/api/assets/${assetid}`,
+      headers: { authorization: "Bearer " + userContext.accessToken },
+    }).then((response) => {
+      if (response.data.status === "not ok") {
+        console.log(response.data.message);
+      } else {
+        console.log(response.data.message);
+        const fetchedAsset = response?.data?.data;
+        setCurrentAsset(fetchedAsset);
+      }
+    });
+  };
+
   useEffect(() => {
-    const fetchCurrentAsset = async () => {
-      const fetchedAsset = await axios.get(`/api/assets/${assetid}`);
-      setCurrentAsset(fetchedAsset?.data?.data);
-    };
     fetchCurrentAsset();
-  }, [assetid]);
+  }, []);
 
   console.log(currentAsset);
 
@@ -35,7 +50,7 @@ export const UpdateAssetAmt = () => {
   };
   return (
     <div>
-      <Link to="/">Back to Home</Link>
+      <Link to={`/${userContext?.data?.username}`}>Back to Home</Link>
       <p>Asset name: {currentAsset?.assetName?.assetName}</p>
       <p>Type: {currentAsset?.assetName?.assetType}</p>
       <form onSubmit={handleSubmit}>

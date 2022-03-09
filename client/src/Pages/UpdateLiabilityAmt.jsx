@@ -1,22 +1,35 @@
 import React from "react";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { useNavigate, Link, useParams } from "react-router-dom";
 import dayjs from "dayjs";
+import { UserContext } from "../App";
 
 export const UpdateLiabilityAmt = () => {
+  const [userContext, setUserContext] = useContext(UserContext);
+
   const navigate = useNavigate();
 
   const { liabilityid } = useParams();
   const [currentLiability, setCurrentLiability] = useState({});
 
+  const fetchCurrentLiability = async () => {
+    await axios({
+      method: "get",
+      url: `/api/liabilities/${liabilityid}`,
+      headers: { authorization: "Bearer " + userContext.accessToken },
+    }).then((response) => {
+      if (response.data.status === "not ok") {
+        console.log(response.data.message);
+      } else {
+        console.log(response.data.message);
+        const fetchedLiability = response?.data?.data;
+        setCurrentLiability(fetchedLiability);
+      }
+    });
+  };
+
   useEffect(() => {
-    const fetchCurrentLiability = async () => {
-      const fetchedCurrentLiability = await axios.get(
-        `/api/liabilities/${liabilityid}`
-      );
-      setCurrentLiability(fetchedCurrentLiability?.data?.data);
-    };
     fetchCurrentLiability();
   }, []);
 
@@ -42,7 +55,7 @@ export const UpdateLiabilityAmt = () => {
   return (
     <div>
       <h3>Update Liability Amount</h3>
-      <Link to="/">Back to Home</Link>
+      <Link to={`/${userContext?.data?.username}`}>Back to Home</Link>
       <p>Liability name: {currentLiability?.liabilityName?.liabilityName}</p>
       <p>Type: {currentLiability?.liabilityName?.liabilityType}</p>
       <form onSubmit={handleSubmit}>

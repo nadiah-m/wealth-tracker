@@ -8,7 +8,7 @@ const LiabilityName = require("../models/liabilitiesNameModel");
 
 const createAccessToken = (userid) => {
   return jwt.sign({ id: userid }, process.env.ACCESS_TOKEN_SECRET, {
-    expiresIn: "300s",
+    expiresIn: "1800s",
   });
 };
 

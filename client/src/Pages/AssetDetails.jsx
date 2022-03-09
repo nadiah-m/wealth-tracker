@@ -1,18 +1,35 @@
+import React from "react";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useState,useContext } from "react";
 import { useParams, Link } from "react-router-dom";
 import dayjs from "dayjs";
+import { UserContext } from "../App";
 
-export function AssetDetails() {
+export const AssetDetails = () => {
+  const [userContext, setUserContext] = useContext(UserContext);
+
   const { assetid } = useParams();
   const [currentAsset, setCurrentAsset] = useState({});
+
+  const fetchCurrentAsset = async () => {
+    await axios({
+      method: "get",
+      url: `/api/assets/${assetid}`,
+      headers: { authorization: "Bearer " + userContext.accessToken },
+    }).then((response) => {
+      if (response.data.status === "not ok") {
+        console.log(response.data.message);
+      } else {
+        console.log(response.data.message);
+        const fetchedAsset = response?.data?.data;
+        setCurrentAsset(fetchedAsset);
+      }
+    });
+  };
+
   useEffect(() => {
-    const fetchCurrentAsset = async () => {
-      const fetchedAsset = await axios.get(`/api/assets/${assetid}`);
-      setCurrentAsset(fetchedAsset?.data?.data);
-    };
     fetchCurrentAsset();
-  }, [assetid]);
+  }, []);
 
   const assetValue = currentAsset?.assetValue;
   console.log("asset", assetValue);
@@ -28,4 +45,4 @@ export function AssetDetails() {
       ))}
     </div>
   );
-}
+};

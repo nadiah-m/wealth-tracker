@@ -16,16 +16,6 @@ function Home() {
 
   const [userData, setUserData] = useState([]);
 
-  // const fetchAllAssets = async () => {
-  //   const Assets = await axios.get("/api/assets");
-  //   setAllAssets(Assets?.data?.data?.allAssets);
-  // };
-
-  // const fetchAllLiabilities = async () => {
-  //   const Liabilities = await axios.get("/api/liabilities");
-  //   setAllLiabilities(Liabilities?.data?.data?.allLiabilities);
-  // };
-
   const fetchUserData = async () => {
     await axios({
       method: "get",
@@ -36,24 +26,20 @@ function Home() {
         console.log(response.data.message);
       } else {
         console.log(response.data.message);
-        // setUserData(UserData);
-        const UserData = response?.data?.data;
-        setUserData(UserData);
-        console.log("UserData", UserData);
+
+        const AssetData = response?.data?.data?.foundAsset;
+        const LiabilityData = response?.data?.data?.foundLiability;
+        setAllAssets(AssetData);
+        setAllLiabilities(LiabilityData);
       }
     });
-
-    // console.log("userData",UserData);
-    // setUserData(UserData?.data?.data);
   };
 
   useEffect(() => {
-    // fetchAllAssets();
-    // fetchAllLiabilities();
     fetchUserData();
   }, []);
 
-  // console.log("userData", userData);
+  console.log("allAssets", allAssets);
 
   const handleDeleteAsset = async (assetid) => {
     await axios
@@ -72,9 +58,10 @@ function Home() {
       allLiabilities.filter((liability) => liability._id !== liabilityid)
     );
   };
+
   let assetTypeAmt = {};
 
-  allAssets.forEach((asset) => {
+  allAssets?.forEach((asset) => {
     if (assetTypeAmt[asset?.assetType]) {
       assetTypeAmt[asset?.assetType] +=
         asset?.assetvalue?.slice(-1)[0]?.valueAmt;
@@ -86,7 +73,7 @@ function Home() {
 
   let liabilityTypeAmt = {};
 
-  allLiabilities.forEach((liability) => {
+  allLiabilities?.forEach((liability) => {
     if (liabilityTypeAmt[liability?.liabilityType]) {
       liabilityTypeAmt[liability?.liabilityType] +=
         liability?.liabilityvalue?.slice(-1)[0]?.valueAmt;
@@ -189,15 +176,16 @@ function Home() {
       Dashboard of current assets and liabilities
       <p>Your total net worth is ${totalNetWorth}</p>
       <h3>Assets</h3>
-      {/* <div className="Pie">
+      <div className="Pie">
         <p>Assets</p>
         <Pie data={assetdata} options={options} />
       </div>
       <div className="Pie">
         <p>Liabilities</p>
         <Pie data={liabilitydata} options={options} />
-      </div> */}
-      {allAssets?.map((asset, index) => (
+      </div>
+      <p>List of Assets and Liabilities</p>
+      {allAssets.map((asset, index) => (
         <div key={index}>
           <p>Asset Name: {asset?.assetName}</p>
           <p>Asset Type: {asset?.assetType}</p>
@@ -211,13 +199,15 @@ function Home() {
             Date:{" "}
             {dayjs(asset?.assetvalue?.slice(-1)[0]?.date).format("DD/MM/YYYY")}
           </p>
-          <Link to={`/assets/${asset?._id}/edit`}>
+          <Link
+            to={`/${userContext?.data?.username}/assets/${asset?._id}/edit`}
+          >
             <button>Edit Asset</button>
           </Link>
-          <Link to={`/assets/${asset?._id}/updateAmt`}>
+          <Link to={`/${userContext?.data?.username}/assets/${asset?._id}/updateAmt`}>
             <button>Update Amount</button>
           </Link>
-          <Link to={`/assets/${asset?._id}`}>
+          <Link to={`/${userContext?.data?.username}/assets/${asset?._id}`}>
             <button>View Asset</button>
           </Link>
           <button onClick={() => handleDeleteAsset(asset?._id)}>Delete</button>
@@ -230,7 +220,7 @@ function Home() {
       <Link to={`/${userContext?.data?.username}/liabilities/new`}>
         <button>Add Liability</button>
       </Link>
-      {allLiabilities?.map((liability, index) => (
+      {allLiabilities.map((liability, index) => (
         <div key={index}>
           <p>Liability name: {liability?.liabilityName}</p>
           <p>Liability Type: {liability?.liabilityType}</p>
@@ -246,13 +236,13 @@ function Home() {
               "DD/MM/YYYY"
             )}
           </p>
-          <Link to={`/liabilities/${liability?._id}/edit`}>
+          <Link to={`/${userContext?.data?.username}/liabilities/${liability?._id}/edit`}>
             <button>Edit Liability</button>
           </Link>
-          <Link to={`/liabilities/${liability?._id}/updateAmt`}>
+          <Link to={`/${userContext?.data?.username}/liabilities/${liability?._id}/updateAmt`}>
             <button>Update Amount</button>
           </Link>
-          <Link to={`/liabilities/${liability?._id}`}>
+          <Link to={`/${userContext?.data?.username}/liabilities/${liability?._id}`}>
             <button>View Liability</button>
           </Link>
           <button onClick={() => handleDeleteLiability(liability?._id)}>
