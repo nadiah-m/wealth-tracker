@@ -1,13 +1,15 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
-import { NavLink, Link } from "react-router-dom";
+import { useEffect, useState, useContext } from "react";
+import { NavLink, Link, useNavigate, useParams } from "react-router-dom";
 import dayjs from "dayjs";
 import Chart from "chart.js/auto";
 import { Pie } from "react-chartjs-2";
 import "./Home.css";
 import ChartDataLabels from "chartjs-plugin-datalabels";
+import { UserContext } from "../../App";
 
-function Home() {
+function Home(props) {
+  const [userContext, setUserContext] = useContext(UserContext);
   Chart.register(ChartDataLabels);
   const [allAssets, setAllAssets] = useState([]);
   const [allLiabilities, setAllLiabilities] = useState([]);
@@ -82,23 +84,23 @@ function Home() {
     assettypeAmt.push(assetTypeAmt[type]);
   }
 
-  console.log("assettypeAmt", assettypeAmt);
+
 
   for (const type in liabilityTypeAmt) {
     liabilitylabels.push(type);
     liabilitytypeAmt.push(liabilityTypeAmt[type]);
   }
-  console.log("liabilitytypeAmt", liabilitytypeAmt);
+
 
   let totalAssets = 0;
   let totalLiabilities = 0;
 
   assettypeAmt.forEach((asset) => (totalAssets += asset));
-  console.log(totalAssets);
+
 
   liabilitytypeAmt.forEach((liability) => {
     totalLiabilities += liability;
-    console.log(totalLiabilities);
+
   });
 
   const totalNetWorth = Number(totalAssets - totalLiabilities).toLocaleString();
@@ -201,7 +203,7 @@ function Home() {
           <button onClick={() => handleDeleteAsset(asset?._id)}>Delete</button>
         </div>
       ))}
-      <Link to={"/assets/new"}>
+      <Link to={`/${userContext?.data?.username}/assets/new`}>
         <button>Add Asset</button>
       </Link>
       <h3>Liabilities</h3>

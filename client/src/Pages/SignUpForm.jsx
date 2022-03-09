@@ -72,7 +72,7 @@ export const SignUpForm = () => {
         if (response.data.status === "not ok") {
           console.log(response.data.message);
         } else {
-          const result = response.data.data;
+          const result = response.data;
           console.log("result", result);
           let user = {
             userID: "",
@@ -87,6 +87,7 @@ export const SignUpForm = () => {
             password: result.password,
           };
           console.log(user);
+          localStorage.setItem("userContext", JSON.stringify(user));
           setUserContext(user);
           navigate("/", { replace: false });
         }

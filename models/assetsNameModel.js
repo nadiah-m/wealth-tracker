@@ -5,6 +5,7 @@ const assetNameSchema = Schema({
   assetName: { type: String, required: true },
   assetType: { type: String, required: true },
   valueAmt: { type: Schema.Types.ObjectId, ref: "AssetValue" },
+  user: { type: Schema.Types.ObjectId, ref: "User" },
 });
 
 assetNameSchema.virtual("assetvalue", {

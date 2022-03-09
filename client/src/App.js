@@ -1,7 +1,7 @@
 import React from "react";
 import "./App.css";
-import { useState, createContext } from "react";
-import { Routes, Route, Link, Navigate } from "react-router-dom";
+import { useState, createContext, useEffect } from "react";
+import { Routes, Route, Link, Navigate, useParams } from "react-router-dom";
 import AssetProjection from "./Pages/AssetProjection/AssetProjection";
 import Home from "./Pages/Home/Home";
 import { SignInForm } from "./Pages/SignInForm";
@@ -18,24 +18,43 @@ import { LiabilityDetails } from "./Pages/LiabilityDetails";
 export const UserContext = createContext();
 
 function App() {
+  const { userID } = useParams();
   const [assets, setAssets] = useState([]);
 
   const addAssets = (asset) => {
     setAssets([...assets, asset]);
   };
 
+  // const [userContext, setUserContext] = useState({
+  //   userID: "",
+  //   username: "",
+  //   password: "",
+  //   isLoggedIn: false,
+  //   isSuperAdmin: false,
+  // });
+
   const [userContext, setUserContext] = useState({
-    userID: "",
-    username: "",
-    password: "",
-    isLoggedIn: false,
   });
 
+  useEffect(() => {
+    const checkLocalStorage = () => {
+      const storedData = localStorage.getItem("userContext");
+      if (!storedData) {
+        return;
+      } else {
+        const parsedStoredData = JSON.parse(storedData);
+        setUserContext(parsedStoredData);
+      }
+    };
+    checkLocalStorage();
+  }, []);
+
+  console.log("check local storage", userContext);
   return (
     <UserContext.Provider value={[userContext, setUserContext]}>
       <div className="App">
         <nav>
-          <Link to="/">Home</Link>
+          <Link to={`/${userContext?.data?.username}`}>Home</Link>
           <Link to="/AssetProjection">AssetProjection</Link>
           <Link to="/signin">Sign In</Link>
           <Link to="/signup">Sign Up</Link>
@@ -44,7 +63,7 @@ function App() {
 
         <main>
           <Routes>
-            <Route path="/" element={<Home />} />
+            <Route path="/:userID" element={<Home />} />
             <Route
               path="/AssetProjection"
               element={
@@ -53,24 +72,33 @@ function App() {
             />
             <Route path="/signin" element={<SignInForm />} />
             <Route path="/signup" element={<SignUpForm />} />
-            <Route path="/assets/new" element={<NewAssetForm />} />
-            <Route path="/assets/:assetid/edit" element={<EditAssetForm />} />
+            <Route path="/:userID/assets/new" element={<NewAssetForm />} />
             <Route
-              path="/assets/:assetid/updateAmt"
+              path="/:userID/assets/:assetid/edit"
+              element={<EditAssetForm />}
+            />
+            <Route
+              path="/:userID/assets/:assetid/updateAmt"
               element={<UpdateAssetAmt />}
             />
-            <Route path="/assets/:assetid/" element={<AssetDetails />} />
             <Route
-              path="/liabilities/:liabilityid/edit"
+              path="/:userID/assets/:assetid/"
+              element={<AssetDetails />}
+            />
+            <Route
+              path="/:userID/liabilities/:liabilityid/edit"
               element={<EditLiabilityForm />}
             />
-            <Route path="/liabilities/new" element={<NewLiabilityForm />} />
             <Route
-              path="/liabilities/:liabilityid/updateAmt"
+              path="/:userID/liabilities/new"
+              element={<NewLiabilityForm />}
+            />
+            <Route
+              path="/:userID/liabilities/:liabilityid/updateAmt"
               element={<UpdateLiabilityAmt />}
             />
             <Route
-              path="/liabilities/:liabilityid"
+              path="/:userID/liabilities/:liabilityid"
               element={<LiabilityDetails />}
             />
           </Routes>

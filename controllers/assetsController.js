@@ -47,7 +47,7 @@ const verify = (req, res, next) => {
   const authHeader = req.headers.authorization;
   if (authHeader) {
     const token = authHeader.split(" ")[1];
-    jwt.verify(token, process.env.TOKEN_SECRET, (err, user) => {
+    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
       if (err) {
         return res.json({ status: "not ok", message: "Token is not valid" });
       }
@@ -76,11 +76,19 @@ router.get("/", async (req, res) => {
 
 //* create new asset
 router.post("/new", verify, async (req, res) => {
+  const currentUser = req.user;
+
   const newAssetName = {
     assetName: req.body.assetName,
     assetType: req.body.assetType,
+    user: req.body.user,
   };
-
+  if (currentUser !== newAssetName.user) {
+    res.status.json({
+      status: "not ok",
+      message: "Please login with the correct username",
+    });
+  }
   try {
     const createdNewAsset = await AssetName.create(newAssetName);
     const newValueAmt = {

@@ -3,6 +3,17 @@ const express = require("express");
 const router = express.Router();
 const User = require("../models/usersModel");
 const jwt = require("jsonwebtoken");
+const { append } = require("express/lib/response");
+
+const createAccessToken = (userid) => {
+  return jwt.sign({ id: userid }, process.env.ACCESS_TOKEN_SECRET, {
+    expiresIn: "300s",
+  });
+};
+
+const createRefreshToken = (userid) => {
+  return jwt.sign({ id: userid }, process.env.REFRESH_TOKEN_SECRET);
+};
 
 //* GET seed users
 router.get("/seed", async (req, res) => {
@@ -11,11 +22,7 @@ router.get("/seed", async (req, res) => {
       username: "admin123",
       email: "admin@123.com",
       password: "admin123",
-    },
-    {
-      username: "testtest",
-      email: "test@test.com",
-      password: "testtest",
+      superAdmin: true,
     },
   ];
 
@@ -25,35 +32,11 @@ router.get("/seed", async (req, res) => {
       user.password = bcrypt.hashSync(user.password, bcrypt.genSaltSync(10));
     });
     const seededUsers = await User.create(seedUsers);
-
-    res
-      .status(200)
-      .json({ status: "ok", message: "seeded users", data: seededUsers });
-  } catch (error) {
-    res.json({ status: "not ok", message: error.message });
-  }
-});
-
-const createToken = (userid) => {
-  return jwt.sign({ id: userid }, process.env.TOKEN_SECRET, {
-    expiresIn: "1800s",
-  });
-};
-
-//* post sign up
-router.post("/signup", async (req, res) => {
-  req.body.password = bcrypt.hashSync(
-    req.body.password,
-    bcrypt.genSaltSync(10)
-  );
-  try {
-    const createdUser = await User.create(req.body);
-    const token = createToken(createdUser._id);
-    // res.cookie("jwt", token, { httpOnly: true, maxAge: 1800 });
-    res.json({
+    const token = createToken(seedUsers._id);
+    res.status(200).json({
       status: "ok",
-      message: "user created",
-      data: createdUser,
+      message: "seeded users",
+      data: seededUsers,
       token: token,
     });
   } catch (error) {
@@ -82,27 +65,115 @@ router.get("/allusername", async (req, res) => {
   }
 });
 
+const verify = (req, res, next) => {
+  const authHeader = req.headers.authorization;
+  if (authHeader) {
+    const token = authHeader.split(" ")[1];
+    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
+      if (err) {
+        return res.json({ status: "not ok", message: "Token is not valid" });
+      }
+      req.user = user;
+      next();
+    });
+  } else {
+    res.json({ status: "not ok", message: "Please login or sign up" });
+  }
+};
+
+//* superadmin authentication
+const isSuperadmin = (req, res, next) => {
+  const user = req.user;
+  console.log(user.superAdmin);
+  if (user && user.superAdmin === true) {
+    return next();
+  } else {
+    res.json({ status: "not ok", message: "user is not a superadmin" });
+  }
+};
+
+//* post sign up
+router.post("/signup", async (req, res) => {
+  req.body.password = bcrypt.hashSync(
+    req.body.password,
+    bcrypt.genSaltSync(10)
+  );
+  try {
+    const createdUser = await User.create(req.body);
+    const token = createAccessToken(createdUser._id);
+    res.json({
+      status: "ok",
+      message: "user created",
+      data: createdUser,
+      token: token,
+    });
+  } catch (error) {
+    res.json({ status: "not ok", message: error.message });
+  }
+});
+
+let refreshTokens = [];
+
+//* refresh token
+router.post("/refresh", async (req, res) => {
+  const refreshToken = req.body.token;
+  if (!refreshToken) {
+    return res.json({
+      status: "not ok",
+      message: "You are not authenticated",
+    });
+  }
+  if (!refreshTokens.includes(refreshToken)) {
+    return res.json({
+      status: "not ok",
+      message: "Refresh token is not valid",
+    });
+  }
+  jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
+    if (err) {
+      return res.json({ status: "not ok", message: error.message });
+    }
+    refreshTokens = refreshTokens.filter((token) => token !== refreshToken);
+    console.log("after filter", refreshTokens);
+    const newAccessToken = createAccessToken(user);
+    const newRefreshToken = createRefreshToken(user);
+    refreshTokens.push(newRefreshToken);
+    console.log("after push", refreshToken);
+    return res.json({
+      status: "ok",
+      accessToken: newAccessToken,
+      refreshToken: newRefreshToken,
+    });
+  });
+});
+
 //* log in
 router.post("/login", async (req, res) => {
   try {
     const foundUser = await User.findOne({ username: req.body.username });
 
     if (!foundUser) {
-      res.json({
+      return res.json({
         status: "not ok",
         message: "No User Found. Please login with the correct username",
       });
     } else {
       if (bcrypt.compareSync(req.body.password, foundUser.password)) {
-        const token = createToken(foundUser._id);
-        res.json({
+        const accessToken = createAccessToken(foundUser._id);
+        const refreshToken = createRefreshToken(foundUser._id);
+        refreshTokens.push(refreshToken);
+        return res.json({
           status: "ok",
           message: "user found",
           data: foundUser,
-          token: token,
+          accessToken: accessToken,
+          refreshToken: refreshToken,
         });
       } else {
-        res.json({ status: "not ok", message: "Password Does Not Match" });
+        return res.json({
+          status: "not ok",
+          message: "Password Does Not Match",
+        });
       }
     }
   } catch (error) {
@@ -110,19 +181,38 @@ router.post("/login", async (req, res) => {
   }
 });
 
-// const verify = (req, res, next) => {
-//   const authHeader = req.headers.authorization;
-//   if (authHeader) {
-//     const token = authHeader.split(" ")[1];
-//     jwt.verify(token, process.env.TOKEN_SECRET, (err, user) => {
-//       if (err) {
-//         return res.json({ status: "not ok", message: "Token is not valid" });
-//       }
-//       req.user = user;
-//       next();
-//     });
-//   } else {
-//     res.json({ status: "not ok", message: "Please login or sign up" });
-//   }
-// };
+router.post("/logout", verify, (req, res) => {
+  const refreshToken = req.body.token;
+  refreshTokens = refreshTokens.filter((token) => token !== refreshToken);
+  console.log("refreshToken not token", refreshTokens);
+  res.json({ status: "ok", message: "You have logged out successfully" });
+});
+
+//* get all users - superadmin
+router.get("/superadmin", verify, isSuperadmin, async (req, res) => {
+  try {
+    const allUsers = await User.find({});
+    res
+      .status(200)
+      .json({ status: "ok", message: "get all users", data: allUsers });
+  } catch (error) {
+    res.json({ status: "not ok", message: error.message });
+  }
+});
+
+//* delete users - superadmin
+router.delete("/superadmin/:userid", isSuperadmin, async (req, res) => {
+  const { userid } = req.params;
+  try {
+    const deletedUser = await User.findByIdAndDelete(userid);
+    res.status(200).json({
+      status: "ok",
+      message: "deleted user",
+      data: deletedUser,
+    });
+  } catch (error) {
+    res.json({ status: "not ok", message: error.message });
+  }
+});
+
 module.exports = router;

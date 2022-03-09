@@ -35,24 +35,25 @@ export const SignInForm = () => {
           const newMsg = response.data.message;
           setMessage(newMsg);
         } else {
-          const result = response.data.data;
+          const result = response.data;
           console.log("user is logged in ", result);
           const loginmsg = "You are logged in";
           setMessage(loginmsg);
-          let user = {
-            userID: "",
-            username: "",
-            password: "",
-            isLoggedIn: true,
-          };
-          user = {
-            ...user,
-            userID: result._id,
-            username: result.username,
-            password: result.password,
-          };
-          console.log(user);
-          setUserContext(user);
+          // let user = {
+          //   userID: "",
+          //   username: "",
+          //   password: "",
+          //   isLoggedIn: true,
+          // };
+          // user = {
+          //   ...user,
+          //   userID: result._id,
+          //   username: result.username,
+          //   password: result.password,
+          // };
+          // console.log(user);
+          localStorage.setItem("userContext", JSON.stringify(result));
+          setUserContext(result);
         }
       });
     },
