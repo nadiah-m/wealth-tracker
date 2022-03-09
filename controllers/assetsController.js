@@ -76,7 +76,7 @@ router.get("/", async (req, res) => {
 
 //* create new asset
 router.post("/new", verify, async (req, res) => {
-  const currentUser = req.user;
+  const currentUser = req.user.id;
 
   const newAssetName = {
     assetName: req.body.assetName,
@@ -84,7 +84,7 @@ router.post("/new", verify, async (req, res) => {
     user: req.body.user,
   };
   if (currentUser !== newAssetName.user) {
-    res.status.json({
+    res.json({
       status: "not ok",
       message: "Please login with the correct username",
     });

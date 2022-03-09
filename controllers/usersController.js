@@ -3,7 +3,8 @@ const express = require("express");
 const router = express.Router();
 const User = require("../models/usersModel");
 const jwt = require("jsonwebtoken");
-const { append } = require("express/lib/response");
+const AssetName = require("../models/assetsNameModel");
+const LiabilityName = require("../models/liabilitiesNameModel");
 
 const createAccessToken = (userid) => {
   return jwt.sign({ id: userid }, process.env.ACCESS_TOKEN_SECRET, {
@@ -212,6 +213,36 @@ router.delete("/superadmin/:userid", isSuperadmin, async (req, res) => {
     });
   } catch (error) {
     res.json({ status: "not ok", message: error.message });
+  }
+});
+
+//*get user data
+router.get("/:userid", verify, async (req, res) => {
+  const { userid } = req.params;
+  const user = req.user;
+  console.log(userid);
+  console.log(user.id);
+  try {
+    const foundAsset = await AssetName.find({ user: userid }).populate(
+      "assetvalue"
+    );
+    const foundLiability = await LiabilityName.find({ user: userid }).populate(
+      "liabilityvalue"
+    );
+    if (user.id === userid) {
+      res.status(200).json({
+        status: "ok",
+        message: "get user home page",
+        data: { foundAsset, foundLiability },
+      });
+    } else {
+      res.json({
+        status: "not ok",
+        message: "please login with the correct username",
+      });
+    }
+  } catch (error) {
+    res.json({ status: "ok", message: error.message });
   }
 });
 

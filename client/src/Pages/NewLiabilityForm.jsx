@@ -1,8 +1,11 @@
 import axios from "axios";
+import { React, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { UserContext } from "../App";
 
 export const NewLiabilityForm = () => {
   const navigate = useNavigate();
+  const [userContext, setUserContext] = useContext(UserContext);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -11,15 +14,27 @@ export const NewLiabilityForm = () => {
       liabilityType: e.target.liabilityType.value,
       valueAmt: e.target.valueAmt.value,
       date: e.target.date.value,
+      user: userContext?.data?._id,
     };
     console.log(newLiability);
-    await axios.post("/api/liabilities/new", newLiability);
-    navigate(-1, { replace: true });
+    await axios({
+      method: "post",
+      url: "/api/liabilities/new",
+      headers: { authorization: "Bearer " + userContext.accessToken },
+      data: newLiability,
+    }).then((response) => {
+      if (response.data.status === "not ok") {
+        console.log(response.data.message);
+      } else {
+        console.log(response.data.message);
+        navigate(-1, { replace: true });
+      }
+    });
   };
   return (
     <>
       <h3>Add Liability</h3>
-      <Link to="/">Back to Home</Link>
+      <Link to={`/${userContext?.data?.username}`}>Back to Home</Link>
       <form onSubmit={handleSubmit}>
         <label> Liability name: </label>
         <input type="text" name="liabilityName" id="liabilityName" />

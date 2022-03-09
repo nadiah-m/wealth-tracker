@@ -2,6 +2,8 @@ const express = require("express");
 const router = express.Router();
 const LiabilityValue = require("../models/liabilitiesValueModel");
 const LiabilityName = require("../models/liabilitiesNameModel");
+const jwt = require("jsonwebtoken");
+
 
 //*get all liabilities
 router.get("/", async (req, res) => {
@@ -20,13 +22,36 @@ router.get("/", async (req, res) => {
   }
 });
 
+const verify = (req, res, next) => {
+  const authHeader = req.headers.authorization;
+  if (authHeader) {
+    const token = authHeader.split(" ")[1];
+    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
+      if (err) {
+        return res.json({ status: "not ok", message: "Token is not valid" });
+      }
+      req.user = user;
+      next();
+    });
+  } else {
+    res.json({ status: "not ok", message: "Please login or sign up" });
+  }
+};
+
 //* create new liability
-router.post("/new", async (req, res) => {
+router.post("/new", verify, async (req, res) => {
+  const currentUser = req.user.id;
   const newLiabilityName = {
     liabilityName: req.body.liabilityName,
     liabilityType: req.body.liabilityType,
+    user: req.body.user,
   };
-
+  if (currentUser !== newLiabilityName.user) {
+    res.json({
+      status: "not ok",
+      message: "Please login with the correct username",
+    });
+  }
   try {
     const createdNewLiability = await LiabilityName.create(newLiabilityName);
     const newValueAmt = {

@@ -8,26 +8,52 @@ import "./Home.css";
 import ChartDataLabels from "chartjs-plugin-datalabels";
 import { UserContext } from "../../App";
 
-function Home(props) {
+function Home() {
   const [userContext, setUserContext] = useContext(UserContext);
   Chart.register(ChartDataLabels);
   const [allAssets, setAllAssets] = useState([]);
   const [allLiabilities, setAllLiabilities] = useState([]);
 
-  const fetchAllAssets = async () => {
-    const Assets = await axios.get("/api/assets");
-    setAllAssets(Assets?.data?.data?.allAssets);
-  };
+  const [userData, setUserData] = useState([]);
 
-  const fetchAllLiabilities = async () => {
-    const Liabilities = await axios.get("/api/liabilities");
-    setAllLiabilities(Liabilities?.data?.data?.allLiabilities);
+  // const fetchAllAssets = async () => {
+  //   const Assets = await axios.get("/api/assets");
+  //   setAllAssets(Assets?.data?.data?.allAssets);
+  // };
+
+  // const fetchAllLiabilities = async () => {
+  //   const Liabilities = await axios.get("/api/liabilities");
+  //   setAllLiabilities(Liabilities?.data?.data?.allLiabilities);
+  // };
+
+  const fetchUserData = async () => {
+    await axios({
+      method: "get",
+      url: `/api/users/${userContext?.data?._id}`,
+      headers: { authorization: "Bearer " + userContext.accessToken },
+    }).then((response) => {
+      if (response.data.status === "not ok") {
+        console.log(response.data.message);
+      } else {
+        console.log(response.data.message);
+        // setUserData(UserData);
+        const UserData = response?.data?.data;
+        setUserData(UserData);
+        console.log("UserData", UserData);
+      }
+    });
+
+    // console.log("userData",UserData);
+    // setUserData(UserData?.data?.data);
   };
 
   useEffect(() => {
-    fetchAllAssets();
-    fetchAllLiabilities();
+    // fetchAllAssets();
+    // fetchAllLiabilities();
+    fetchUserData();
   }, []);
+
+  // console.log("userData", userData);
 
   const handleDeleteAsset = async (assetid) => {
     await axios
@@ -84,23 +110,18 @@ function Home(props) {
     assettypeAmt.push(assetTypeAmt[type]);
   }
 
-
-
   for (const type in liabilityTypeAmt) {
     liabilitylabels.push(type);
     liabilitytypeAmt.push(liabilityTypeAmt[type]);
   }
-
 
   let totalAssets = 0;
   let totalLiabilities = 0;
 
   assettypeAmt.forEach((asset) => (totalAssets += asset));
 
-
   liabilitytypeAmt.forEach((liability) => {
     totalLiabilities += liability;
-
   });
 
   const totalNetWorth = Number(totalAssets - totalLiabilities).toLocaleString();
@@ -168,15 +189,14 @@ function Home(props) {
       Dashboard of current assets and liabilities
       <p>Your total net worth is ${totalNetWorth}</p>
       <h3>Assets</h3>
-      <div className="Pie">
+      {/* <div className="Pie">
         <p>Assets</p>
         <Pie data={assetdata} options={options} />
       </div>
       <div className="Pie">
         <p>Liabilities</p>
         <Pie data={liabilitydata} options={options} />
-      </div>
-      <div></div>
+      </div> */}
       {allAssets?.map((asset, index) => (
         <div key={index}>
           <p>Asset Name: {asset?.assetName}</p>
@@ -207,7 +227,7 @@ function Home(props) {
         <button>Add Asset</button>
       </Link>
       <h3>Liabilities</h3>
-      <Link to={"/liabilities/new"}>
+      <Link to={`/${userContext?.data?.username}/liabilities/new`}>
         <button>Add Liability</button>
       </Link>
       {allLiabilities?.map((liability, index) => (
