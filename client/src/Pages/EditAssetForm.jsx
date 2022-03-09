@@ -62,7 +62,7 @@ export const EditAssetForm = () => {
         <select
           id="assetType"
           name="assetType"
-          value={currentAsset?.assetName?.assetType}
+          defaultValue={currentAsset?.assetName?.assetType}
         >
           <option value="General">General</option>
           <option value="Cash">Cash</option>

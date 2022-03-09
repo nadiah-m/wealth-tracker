@@ -62,7 +62,7 @@ export const EditLiabilityForm = () => {
         <select
           id="liabilityType"
           name="liabilityType"
-          value={currentLiability?.liabilityName?.liabilityType}
+          defaultValue={currentLiability?.liabilityName?.liabilityType}
         >
           <option value="Loan">Loan</option>
           <option value="Mortgage">Mortgage</option>
