@@ -1,14 +1,18 @@
 import React from "react";
 import { useState, useContext } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { Line } from "react-chartjs-2";
 import Chart from "chart.js/auto";
 import { AssetProjectionForm } from "../Components/AssetProjectionForm";
 import axios from "axios";
 import { UserContext } from "../App";
+import { Navigate } from "react-router-dom";
 
 //individual asset to add and calculate future projections
 
 function SingleAssetProjection(props) {
+  const navigate = useNavigate();
+
   const [message, setMessage] = useState("");
   const [displayResult, setDisplayResult] = useState("");
   const [userContext, setUserContext] = useContext(UserContext);
@@ -118,8 +122,7 @@ function SingleAssetProjection(props) {
       futureValues,
       user: userContext?.data?._id,
     };
-    setDisplayResult(`Based on your compounding schedule and estimated interest rate, you will
-    have ${finalFVNr} in ${years} years from ${assetName}.`);
+
     await axios({
       method: "post",
       url: "/api/assetprojections/new",
@@ -131,6 +134,7 @@ function SingleAssetProjection(props) {
         setMessage("You are not logged in. Please login or sign up");
       } else {
         console.log(response.data.message);
+        navigate(`/${userContext.username}/financialgoals`);
       }
     });
     props.addAssets(projectionAsset);
@@ -190,7 +194,7 @@ function SingleAssetProjection(props) {
       </div>
       <div className="d-grid col-6 mx-auto p-5">{displayResult}</div>
       <form onSubmit={handleSubmit}>
-        <div className="d-grid col-3 mx-auto p-5">
+        <div className="d-grid col-3 mx-auto mt-0 pt-0 px-5">
           <button type="submit" className="btn btn-secondary">
             Add to financial goal
           </button>
