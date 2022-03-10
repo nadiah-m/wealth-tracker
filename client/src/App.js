@@ -16,7 +16,7 @@ import { NewLiabilityForm } from "./Pages/NewLiabilityForm";
 import { EditLiabilityForm } from "./Pages/EditLiabilityForm";
 import { UpdateLiabilityAmt } from "./Pages/UpdateLiabilityAmt";
 import { LiabilityDetails } from "./Pages/LiabilityDetails";
-
+import { FinancialGoals } from "./Pages/FinancialGoals";
 
 export const UserContext = createContext();
 
@@ -66,7 +66,7 @@ function App() {
             <div className="px-4 fs-5 m-auto">
               <Link
                 className="text-decoration-none text-white"
-                to={`/${userContext?.data?.username}`}
+                to={`/${userContext?.data?.username}/`}
               >
                 Home
               </Link>
@@ -78,6 +78,14 @@ function App() {
                 to="/AssetProjection"
               >
                 Goals Calculator
+              </Link>
+            </div>
+            <div className="px-4 fs-5 m-auto">
+              <Link
+                className="text-decoration-none text-white"
+                to={`/${userContext?.data?.username}/financialgoals`}
+              >
+                Financial Goals
               </Link>
             </div>
 
@@ -113,6 +121,10 @@ function App() {
                 <AssetProjection addAssets={addAssets} assets={assets} />
               }
             />
+            <Route
+              path="/:userID/financialgoals"
+              element={<FinancialGoals addAssets={addAssets} assets={assets} />}
+            />
             <Route path="/signin" element={<SignInForm />} />
             <Route path="/signup" element={<SignUpForm />} />
             <Route path="/:userID/assets/new" element={<NewAssetForm />} />
@@ -145,7 +157,6 @@ function App() {
               element={<LiabilityDetails />}
             />
           </Routes>
-          
         </main>
       </div>
     </UserContext.Provider>

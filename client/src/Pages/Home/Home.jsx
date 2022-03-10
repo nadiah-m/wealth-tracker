@@ -65,6 +65,7 @@ function Home() {
 
   let assetTypeAmt = {};
 
+  //* for each asset type, take the last updated amount and add up the amount in an object
   allAssets?.forEach((asset) => {
     if (assetTypeAmt[asset?.assetType]) {
       assetTypeAmt[asset?.assetType] +=
@@ -75,8 +76,11 @@ function Home() {
     }
   });
 
+  console.log("assetTypeAmt",assetTypeAmt)
+
   let liabilityTypeAmt = {};
 
+  //* for each liability type, last updated amount and add up the amount in an object
   allLiabilities?.forEach((liability) => {
     if (liabilityTypeAmt[liability?.liabilityType]) {
       liabilityTypeAmt[liability?.liabilityType] +=
@@ -101,6 +105,10 @@ function Home() {
     assettypeAmt.push(assetTypeAmt[type]);
   }
 
+  console.log("assetTypeAmt",assetTypeAmt);
+  console.log("assettypeAmt",assettypeAmt)
+
+  //* loop through object and create two separate arrays for type and amount
   for (const type in liabilityTypeAmt) {
     liabilitylabels.push(type);
     liabilitytypeAmt.push(liabilityTypeAmt[type]);
@@ -109,14 +117,17 @@ function Home() {
   let totalAssets = 0;
   let totalLiabilities = 0;
 
+  //* calculate total assets for net worth
   assettypeAmt.forEach((asset) => (totalAssets += asset));
 
+  //*calculate total liabilities for net worth
   liabilitytypeAmt.forEach((liability) => {
     totalLiabilities += liability;
   });
 
   const totalNetWorth = Number(totalAssets - totalLiabilities).toLocaleString();
 
+  //* colors of chart
   const CHART_COLORS = [
     "rgb(255, 99, 132)",
     "rgb(255, 159, 64)",
@@ -179,10 +190,8 @@ function Home() {
     <div className="container-fluid">
       <div className="d-grid gap-4">
         <div className="p-5">
-          <h4>
-            Your total net worth is </h4>
-            <h4 className="fs-2">${totalNetWorth}</h4>
-
+          <h4>Your total net worth is </h4>
+          <h4 className="fs-2">${totalNetWorth}</h4>
         </div>
 
         <div className="p-2">

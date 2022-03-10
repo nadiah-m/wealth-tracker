@@ -5,6 +5,7 @@ const User = require("../models/usersModel");
 const jwt = require("jsonwebtoken");
 const AssetName = require("../models/assetsNameModel");
 const LiabilityName = require("../models/liabilitiesNameModel");
+const AssetProjection = require("../models/assetProjectionModel");
 
 const createAccessToken = (userid) => {
   return jwt.sign({ id: userid }, process.env.ACCESS_TOKEN_SECRET, {
@@ -72,7 +73,6 @@ const verify = (req, res, next) => {
     const token = authHeader.split(" ")[1];
     jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
       if (err) {
-        
         return res.json({ status: "not ok", message: "Token is not valid" });
       }
       req.user = user;
@@ -228,11 +228,13 @@ router.get("/:userid", verify, async (req, res) => {
     const foundLiability = await LiabilityName.find({ user: userid }).populate(
       "liabilityvalue"
     );
+
+    const foundAssetProjection = await AssetProjection.find({ user: userid });
     if (user.id === userid) {
       res.status(200).json({
         status: "ok",
         message: "get user home page",
-        data: { foundAsset, foundLiability },
+        data: { foundAsset, foundLiability, foundAssetProjection },
       });
     } else {
       res.json({

@@ -5,43 +5,6 @@ const AssetName = require("../models/assetsNameModel");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 
-// //*seed assets
-// router.get("/seed", async (req, res) => {
-//   const seedAsset = [
-//     {
-//       assetName: "S&P 500",
-//       assetType: "Stock",
-//       valueAmt: 8000,
-//       date: "2022-04-03",
-//       user: "621f4acf1280b7827a0aa76e",
-//     },
-//     {
-//       assetName: "Bond",
-//       assetType: "Bond",
-//       valueAmt: 1000,
-//       date: "2022-04-03",
-//       user: "621f4acf1280b7827a0aa76e",
-//     },
-//     {
-//       assetName: "CPF",
-//       assetType: "CPF",
-//       valueAmt: 15000,
-//       date: "2022-04-03",
-//       user: "621f4acf1280b7827a0aa76e",
-//     },
-//   ];
-//   try {
-//     await Asset.deleteMany({});
-//     const createdAsset = await Asset.create(seedAsset);
-//     res.status(200).json({
-//       status: "ok",
-//       message: "seeded assets",
-//       data: { createdAsset },
-//     });
-//   } catch (error) {
-//     res.json({ status: "ok", message: "error.message" });
-//   }
-// });
 
 const verify = (req, res, next) => {
   const authHeader = req.headers.authorization;

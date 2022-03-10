@@ -4,7 +4,7 @@
 export const AssetProjectionForm = (props) => {
   return (
     <>
-      <form onSubmit={props.handleSubmit}>
+      <form onSubmit={props.handleCalculate}>
         <div className="px-5 mt-5 align-self-center">
           <fieldset>
             <label htmlFor="assetName" className="form-label">
@@ -44,13 +44,8 @@ export const AssetProjectionForm = (props) => {
                 onChange={(e) => props.setContrAmt(e.target.value)}
               />
             </div>
-            <br />
-            {/* <label>Length of Time in Years: </label>
-          <input
-            type="number"
-            value={props.years}
-            onChange={(e) => props.setYears(e.target.value)}
-          /> */}
+     
+     
             <br />
             <label htmlFor="intRate" className="form-label">
               Estimated annual interest rate:

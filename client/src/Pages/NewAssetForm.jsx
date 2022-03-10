@@ -34,7 +34,7 @@ export const NewAssetForm = () => {
         setMessage("You are not logged in. Please login or sign up");
       } else {
         console.log(response.data.message);
-        
+        navigate(`/${userContext.username}`);
       }
     });
   };

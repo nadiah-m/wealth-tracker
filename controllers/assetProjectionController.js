@@ -55,4 +55,22 @@ router.post("/new", verify, async (req, res) => {
   }
 });
 
+//* delete asset projection
+router.delete("/:assetprojid", async (req, res) => {
+  const { assetprojid } = req.params;
+  try {
+    const deletedAssetProj = await AssetProjection.findByIdAndDelete(
+      assetprojid
+    );
+
+    res.status(200).json({
+      status: "ok",
+      message: "deleted asset",
+      data: { deletedAssetProj },
+    });
+  } catch (error) {
+    res.json({ status: "not ok", message: error.message });
+  }
+});
+
 module.exports = router;

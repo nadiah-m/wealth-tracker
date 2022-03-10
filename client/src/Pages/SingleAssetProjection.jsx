@@ -2,7 +2,7 @@ import React from "react";
 import { useState, useContext } from "react";
 import { Line } from "react-chartjs-2";
 import Chart from "chart.js/auto";
-import { AssetProjectionForm } from "./AssetProjectionForm";
+import { AssetProjectionForm } from "../Components/AssetProjectionForm";
 import axios from "axios";
 import { UserContext } from "../App";
 
@@ -34,9 +34,7 @@ function SingleAssetProjection(props) {
 
   const futureValues = [];
 
-  //max no of years of savings
-  //if years< no of savings => amt will be previous value * interest rate
-
+  //* formula to calculate futureValues and push to array
   for (let i = 0; i <= years; i++) {
     let t = i;
     let nper = 12 * t;
@@ -46,13 +44,13 @@ function SingleAssetProjection(props) {
     futureValues.push(futureValue.toFixed(2));
   }
 
+  //* get final future value at the end to display result
   const finalFutureValue = Number(futureValues[futureValues.length - 1]);
   const finalFVNr = finalFutureValue.toLocaleString("en-US", {
     maximumFractionDigits: 2,
   });
 
   const presentValues = [];
-
   for (let i = 0; i <= years; i++) {
     let presentValue = parseInt(P) + parseInt(A * (12 * i));
     presentValues.push(presentValue.toFixed(2));
@@ -100,6 +98,12 @@ function SingleAssetProjection(props) {
         },
       },
     },
+  };
+
+  const handleCalculate = async (e) => {
+    e.preventDefault();
+    setDisplayResult(`Based on your compounding schedule and estimated interest rate, you will
+    have $${finalFVNr} in ${years} years from ${assetName}.`);
   };
 
   const handleSubmit = async (e) => {
@@ -174,7 +178,7 @@ function SingleAssetProjection(props) {
             intRate={intRate}
             frequency={frequency}
             // years={years}
-            handleSubmit={handleSubmit}
+            handleCalculate={handleCalculate}
             setAssetName={setAssetName}
             setInitialAmt={setInitialAmt}
             setContrAmt={setContrAmt}
@@ -184,11 +188,15 @@ function SingleAssetProjection(props) {
           />
         </div>
       </div>
-      {/* <p>
-        Based on your compounding schedule and estimated interest rate, you will
-        have ${finalFVNr} in {years} years from {assetName}.
-      </p> */}
-      {displayResult}
+      <div className="d-grid col-6 mx-auto p-5">{displayResult}</div>
+      <form onSubmit={handleSubmit}>
+        <div className="d-grid col-3 mx-auto p-5">
+          <button type="submit" className="btn btn-secondary">
+            Add to financial goal
+          </button>
+        </div>
+      </form>
+
       <Line data={data} options={options} />
     </>
   );

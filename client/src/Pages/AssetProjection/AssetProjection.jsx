@@ -1,5 +1,5 @@
-import SingleAssetProjection from "../../Components/SingleAssetProjection";
-import TotalAssetProjection from "../../Components/TotalAssetProjection";
+import SingleAssetProjection from "../SingleAssetProjection";
+
 
 function AssetProjection(props) {
   return (
@@ -8,10 +8,7 @@ function AssetProjection(props) {
         addAssets={props.addAssets}
         assets={props.assets}
       />
-      <TotalAssetProjection
-        addAssets={props.addAssets}
-        assets={props.assets}
-      />
+      
     </>
   );
 }
