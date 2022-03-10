@@ -1,5 +1,7 @@
 import React from "react";
 import "./App.css";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import { useState, createContext, useEffect } from "react";
 import { Routes, Route, Link, Navigate, useParams } from "react-router-dom";
 import AssetProjection from "./Pages/AssetProjection/AssetProjection";
@@ -20,7 +22,7 @@ export const UserContext = createContext();
 function App() {
   const { userID } = useParams();
   const [assets, setAssets] = useState([]);
-
+  const navigate = useNavigate();
   const addAssets = (asset) => {
     setAssets([...assets, asset]);
   };
@@ -39,6 +41,20 @@ function App() {
     };
     checkLocalStorage();
   }, []);
+
+  const handleSignout = async (e) => {
+    e.preventDefault();
+    axios({
+      method: "post",
+      url: "/api/users/logout",
+    }).then((response) => {
+      console.log(response.data.message);
+      localStorage.removeItem("userContext");
+      setUserContext({});
+    
+      navigate("/signin", { replace: false });
+    });
+  };
 
   console.log("check local storage", userContext);
   return (
@@ -75,7 +91,15 @@ function App() {
                 Sign Up
               </Link>
             </div>
-        
+            <div className="px-4 m-auto">
+              <form onSubmit={handleSignout}>
+                <input
+                  type="submit"
+                  className="fs-5 btn btn-outline-dark text-white bg-dark"
+                  value="Sign Out"
+                />
+              </form>
+            </div>
           </div>
         </nav>
 
