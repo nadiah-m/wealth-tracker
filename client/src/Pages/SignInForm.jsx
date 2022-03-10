@@ -3,8 +3,7 @@ import { useFormik, validateYupSchema } from "formik";
 import axios from "axios";
 import * as Yup from "yup";
 import { UserContext } from "../App";
-import { useNavigate } from "react-router-dom";
-
+import { useNavigate, Link } from "react-router-dom";
 
 export const SignInForm = () => {
   const [userContext, setUserContext] = useContext(UserContext);
@@ -54,10 +53,7 @@ export const SignInForm = () => {
   return (
     <div className="container mt-5">
       <h4>Log In</h4>
-      <div
-        className="row d-flex card mx-auto"
-        style={{width: "50rem"}}
-      >
+      <div className="row d-flex card mx-auto" style={{ width: "50rem" }}>
         <form onSubmit={formik.handleSubmit}>
           <div className="px-5 mt-5 align-self-center">
             <label htmlFor="username" className="form-label">
@@ -105,6 +101,10 @@ export const SignInForm = () => {
           </div>
         </form>
         <div className="text-danger">{message}</div>
+        No account?{" "}
+        <Link className="text-decoration-none" to="/signup">
+          Sign up for an account
+        </Link>
       </div>
     </div>
   );

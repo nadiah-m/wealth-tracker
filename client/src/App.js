@@ -64,6 +64,11 @@ function App() {
         <nav className="navbar navbar-light bg-dark container-fluid">
           <div className="d-flex">
             <div className="px-4 fs-5 m-auto">
+              <Link className="text-decoration-none text-white" to={`/`}>
+                Home
+              </Link>
+            </div>
+            <div className="px-4 fs-5 m-auto">
               <Link
                 className="text-decoration-none text-white"
                 to={`/${userContext?.data?.username}/`}
@@ -114,6 +119,7 @@ function App() {
 
         <main>
           <Routes>
+            <Route path="/" element={<SignInForm />} />
             <Route path="/:userID" element={<Home />} />
             <Route
               path="/AssetProjection"
