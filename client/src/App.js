@@ -51,7 +51,7 @@ function App() {
       console.log(response.data.message);
       localStorage.removeItem("userContext");
       setUserContext({});
-    
+
       navigate("/signin", { replace: false });
     });
   };
@@ -96,7 +96,7 @@ function App() {
                 <input
                   type="submit"
                   className="fs-5 btn btn-outline-dark text-white bg-dark"
-                  value="Sign Out"
+                  value="Log Out"
                 />
               </form>
             </div>
