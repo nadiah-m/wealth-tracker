@@ -1,10 +1,12 @@
 import axios from "axios";
-import { React, useContext } from "react";
+import { React, useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { UserContext } from "../App";
+import { HomeIcon } from "../Components/HomeIcon";
 
 export const NewLiabilityForm = () => {
   const navigate = useNavigate();
+  const [message, setMessage] = useState("");
   const [userContext, setUserContext] = useContext(UserContext);
 
   const handleSubmit = async (e) => {
@@ -25,6 +27,7 @@ export const NewLiabilityForm = () => {
     }).then((response) => {
       if (response.data.status === "not ok") {
         console.log(response.data.message);
+        setMessage("You are not logged in. Please login or sign up");
       } else {
         console.log(response.data.message);
         navigate(-1, { replace: true });
@@ -33,26 +36,84 @@ export const NewLiabilityForm = () => {
   };
   return (
     <>
-      <h3>Add Liability</h3>
-      <Link to={`/${userContext?.data?.username}`}>Back to Home</Link>
-      <form onSubmit={handleSubmit}>
-        <label> Liability name: </label>
-        <input type="text" name="liabilityName" id="liabilityName" />
-        <br />
-        <label htmlFor="liabilityType"> Type: </label>
-        <select id="liabilityType" name="liabilityType">
-          <option value="Loan">Loan</option>
-          <option value="Mortgage">Mortgage</option>
-          <option value="Credit Card">Credit Card</option>
-        </select>
-        <br />
-        <label> Amount: </label>
-        <input type="number" name="valueAmt" id="valueAmt" />
-        <br />
-        <label> Date</label>
-        <input type="date" name="date" id="date" />
-        <button type="submit">Add Liability</button>
-      </form>
+      <div className="container mt-5">
+        <h4>Add Liability</h4>
+        <div className="row d-flex card mx-auto" style={{ width: "50rem" }}>
+          <Link
+            className="text-decoration-none"
+            to={`/${userContext?.data?.username}`}
+          >
+            <button type="button" className="btn btn-outline-secondary mt-3">
+              <HomeIcon />
+            </button>
+          </Link>
+          <form onSubmit={handleSubmit}>
+            <div className="px-5 mt-5 align-self-center">
+              <label htmlFor="liabilityName" className="form-label">
+                {" "}
+                Liability name:{" "}
+              </label>
+              <input
+                type="text"
+                name="liabilityName"
+                id="liabilityName"
+                className="form-control"
+              />
+            </div>
+            <br />
+            <div className="px-5 mt-0 align-self-center">
+              <label htmlFor="liabilityType" className="form-label">
+                {" "}
+                Type:{" "}
+              </label>
+              <select
+                id="liabilityType"
+                name="liabilityType"
+                className="form-select"
+              >
+                <option value="Loan">Loan</option>
+                <option value="Mortgage">Mortgage</option>
+                <option value="Credit Card">Credit Card</option>
+              </select>
+            </div>
+            <br />
+            <div className="px-5 mt-0 align-self-center ">
+              <label htmlFor="valueAmt" className="form-label">
+                {" "}
+                Amount:{" "}
+              </label>
+              <div className="input-group">
+                <div className="input-group-text col-1">$</div>
+                <input
+                  type="number"
+                  name="valueAmt"
+                  id="valueAmt"
+                  className="form-control"
+                />
+              </div>
+            </div>
+            <br />
+            <div className="px-5 mt-0 align-self-center ">
+              <label htmlFor="date" className="form-label">
+                {" "}
+                Date
+              </label>
+              <input
+                type="date"
+                name="date"
+                id="date"
+                className="form-control"
+              />
+            </div>
+            <div className="d-grid col-4 mx-auto p-5">
+              <button type="submit" className="btn btn-secondary">
+                Add Liability
+              </button>
+            </div>
+          </form>
+          <div className="text-danger">{message}</div>
+        </div>
+      </div>
     </>
   );
 };

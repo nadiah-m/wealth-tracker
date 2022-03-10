@@ -46,7 +46,7 @@ function App() {
       <div className="App">
         <nav className="navbar navbar-light bg-dark container-fluid">
           <div className="d-flex">
-            <div className="p-2 fs-5">
+            <div className="px-4 fs-5 m-auto">
               <Link
                 className="text-decoration-none text-white"
                 to={`/${userContext?.data?.username}`}
@@ -55,22 +55,22 @@ function App() {
               </Link>
             </div>
 
-            <div className="p-2 fs-5">
+            <div className="px-4 fs-5 m-auto">
               <Link
                 className="text-decoration-none text-white"
                 to="/AssetProjection"
               >
-                AssetProjection
+                Goals Calculator
               </Link>
             </div>
 
-            <div className="p-2 fs-5">
+            <div className="px-4 fs-5 m-auto">
               <Link className="text-decoration-none text-white" to="/signin">
                 Log In
               </Link>
             </div>
 
-            <div className="p-2 fs-5">
+            <div className="px-4 fs-5 m-auto">
               <Link className="text-decoration-none text-white" to="/signup">
                 Sign Up
               </Link>

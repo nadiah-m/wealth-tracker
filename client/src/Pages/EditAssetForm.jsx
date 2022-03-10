@@ -3,11 +3,12 @@ import axios from "axios";
 import { useEffect, useState, useContext } from "react";
 import { useNavigate, Link, useParams } from "react-router-dom";
 import { UserContext } from "../App";
+import { HomeIcon } from "../Components/HomeIcon";
 
 export const EditAssetForm = () => {
   const [userContext, setUserContext] = useContext(UserContext);
   const navigate = useNavigate();
-
+  const [message, setMessage] = useState("");
   const { assetid } = useParams();
   const [currentAsset, setCurrentAsset] = useState({});
 
@@ -18,6 +19,7 @@ export const EditAssetForm = () => {
       headers: { authorization: "Bearer " + userContext.accessToken },
     }).then((response) => {
       if (response.data.status === "not ok") {
+        setMessage("You are not logged in. Please login or sign up");
         console.log(response.data.message);
       } else {
         console.log(response.data.message);
@@ -45,36 +47,60 @@ export const EditAssetForm = () => {
   };
 
   return (
-    <div>
-      <h3>Edit Assets</h3>
-      <Link to={`/${userContext?.data?.username}`}>Back to Home</Link>
-      <form onSubmit={handleSubmit}>
-        <label> Asset name: </label>
-        <input
-          type="text"
-          name="assetName"
-          id="assetName"
-          defaultValue={currentAsset?.assetName?.assetName}
-        />
-
-        <br />
-        <label htmlFor="assetType"> Type: </label>
-        <select
-          id="assetType"
-          name="assetType"
-          defaultValue={currentAsset?.assetName?.assetType}
+    <div className="container mt-5">
+      <h4>Edit Asset</h4>
+      <div className="row d-flex card mx-auto" style={{ width: "50rem" }}>
+        <Link
+          className="text-decoration-none"
+          to={`/${userContext?.data?.username}`}
         >
-          <option value="General">General</option>
-          <option value="Cash">Cash</option>
-          <option value="Stock">Stock</option>
-          <option value="Bond">Bond</option>
-          <option value="CPF">CPF</option>
-          <option value="Property">Property</option>
-        </select>
-        <br />
-
-        <button type="submit">Update Asset</button>
-      </form>
+          <button type="button" className="btn btn-outline-secondary mt-3">
+            <HomeIcon />
+          </button>
+        </Link>
+        <form onSubmit={handleSubmit}>
+          <div className="px-5 mt-5 align-self-center">
+            <label htmlFor="assetName" className="form-label">
+              {" "}
+              Asset name:{" "}
+            </label>
+            <input
+              type="text"
+              name="assetName"
+              id="assetName"
+              className="form-control"
+              defaultValue={currentAsset?.assetName?.assetName}
+            />
+          </div>
+          <br />
+          <div className="px-5 mt-0 align-self-center">
+            <label htmlFor="assetType" className="form-label">
+              {" "}
+              Type:{" "}
+            </label>
+            <select
+              id="assetType"
+              name="assetType"
+              className="form-select"
+              defaultValue={currentAsset?.assetName?.assetType}
+            >
+              <option value="General">General</option>
+              <option value="Cash">Cash</option>
+              <option value="Stock">Stock</option>
+              <option value="Bond">Bond</option>
+              <option value="CPF">CPF</option>
+              <option value="Property">Property</option>
+            </select>
+          </div>
+          <br />
+          <div className="d-grid col-4 mx-auto p-5">
+            <button type="submit" className="btn btn-secondary">
+              Update
+            </button>
+          </div>
+        </form>
+        <div className="text-danger">{message}</div>
+      </div>
     </div>
   );
 };

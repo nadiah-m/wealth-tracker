@@ -4,10 +4,9 @@ import axios from "axios";
 import * as Yup from "yup";
 import { UserContext } from "../App";
 import { useNavigate } from "react-router-dom";
-import "./Form.css";
+
 
 export const SignUpForm = () => {
-  const navigate = useNavigate();
   const [allUsernames, setAllUsernames] = useState([]);
   const [message, setMessage] = useState("");
   const [userContext, setUserContext] = useContext(UserContext);
@@ -98,11 +97,11 @@ export const SignUpForm = () => {
   });
 
   return (
-    <div className="container mt-5">
+    <div className="container-sm mt-5">
       <h4>Sign Up</h4>
-      <div className="row d-flex justify-content-center">
+      <div className="row d-flex card mx-auto" style={{ width: "50rem" }}>
         <form onSubmit={formik.handleSubmit}>
-          <div className="p-1 align-self-center mb-3">
+          <div className="px-5 mt-5 align-self-center">
             <label htmlFor="username" className="form-label">
               Username
             </label>
@@ -121,7 +120,7 @@ export const SignUpForm = () => {
             </div>
           </div>
           <br />
-          <div className="p-1 align-self-center mb-3">
+          <div className="px-5 mt-0 align-self-center">
             <label htmlFor="email" className="form-label">
               Email Address
             </label>
@@ -140,7 +139,7 @@ export const SignUpForm = () => {
             </div>
           </div>
           <br />
-          <div className="p-1 align-self-center mb-3">
+          <div className="px-5 mt-0 align-self-center">
             <label htmlFor="password" className="form-label">
               Password
             </label>
@@ -160,7 +159,7 @@ export const SignUpForm = () => {
             </div>
           </div>
           <br />
-          <div className="p-1 align-self-center mb-3">
+          <div className="px-5 mt-0 align-self-center">
             <label htmlFor="repeatPassword" className="form-label">
               Repeat Password
             </label>
@@ -180,7 +179,7 @@ export const SignUpForm = () => {
             </div>
           </div>
           <br />
-          <div className="d-grid col-2 mx-auto">
+          <div className="d-grid col-4 mx-auto mt-0 p-5">
             <button type="submit" className="btn btn-secondary">
               Sign Up
             </button>

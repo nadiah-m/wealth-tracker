@@ -95,7 +95,7 @@ export const HomeAssetTable = (props) => {
         </table>
 
         <Link to={`/${userContext?.data?.username}/assets/new`}>
-          <div className="d-grid col-6 mx-auto">
+          <div className="d-grid col-6 mt-4 mx-auto">
             <button type="button" className="btn btn-secondary">
               Add Asset
             </button>

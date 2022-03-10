@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useEffect, useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import Chart from "chart.js/auto";
 import { Pie } from "react-chartjs-2";
 import "./Home.css";
@@ -14,6 +15,7 @@ function Home() {
   Chart.register(ChartDataLabels);
   const [allAssets, setAllAssets] = useState([]);
   const [allLiabilities, setAllLiabilities] = useState([]);
+  const navigate = useNavigate();
 
   const fetchUserData = async () => {
     await axios({
@@ -23,6 +25,7 @@ function Home() {
     }).then((response) => {
       if (response.data.status === "not ok") {
         console.log(response.data.message);
+        navigate("/signin", { replace: true });
       } else {
         console.log(response.data.message);
 

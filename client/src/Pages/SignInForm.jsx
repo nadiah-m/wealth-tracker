@@ -4,7 +4,7 @@ import axios from "axios";
 import * as Yup from "yup";
 import { UserContext } from "../App";
 import { useNavigate } from "react-router-dom";
-import "./Form.css";
+
 
 export const SignInForm = () => {
   const [userContext, setUserContext] = useContext(UserContext);
@@ -54,9 +54,12 @@ export const SignInForm = () => {
   return (
     <div className="container mt-5">
       <h4>Log In</h4>
-      <div className="row d-flex justify-content-center">
+      <div
+        className="row d-flex card mx-auto"
+        style={{width: "50rem"}}
+      >
         <form onSubmit={formik.handleSubmit}>
-          <div className="p-5 align-self-center card">
+          <div className="px-5 mt-5 align-self-center">
             <label htmlFor="username" className="form-label">
               Username
             </label>
@@ -76,7 +79,7 @@ export const SignInForm = () => {
           </div>
           <br />
 
-          <div className="p-5 align-self-center">
+          <div className="px-5 mt-0 align-self-center">
             <label htmlFor="password" className="form-label">
               Password
             </label>
@@ -95,7 +98,7 @@ export const SignInForm = () => {
               ) : null}
             </div>
           </div>
-          <div className="d-grid col-2 mx-auto">
+          <div className="d-grid col-4 mx-auto p-5">
             <button type="submit" className="btn btn-secondary">
               Login
             </button>
