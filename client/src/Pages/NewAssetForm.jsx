@@ -3,6 +3,7 @@ import { React, useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { UserContext } from "../App";
 import jwt_decode from "jwt-decode";
+import NumberFormat from "react-number-format";
 import { HomeIcon } from "../Components/HomeIcon";
 const axiosJWT = axios.create();
 
@@ -10,17 +11,18 @@ export const NewAssetForm = () => {
   const navigate = useNavigate();
   const [message, setMessage] = useState("");
   const [userContext, setUserContext] = useContext(UserContext);
+  const [value, setValue] = useState();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const newAsset = {
       assetName: e.target.assetName.value,
       assetType: e.target.assetType.value,
-      valueAmt: e.target.valueAmt.value,
+      valueAmt: value,
       date: e.target.date.value,
       user: userContext?.data?._id,
     };
-    console.log(newAsset);
+
     // await axios.post("/api/assets/new", newAsset);
 
     await axios({
@@ -86,11 +88,18 @@ export const NewAssetForm = () => {
               </label>
               <div className="input-group">
                 <div className="input-group-text col-1">$</div>
-                <input
-                  type="number"
-                  name="valueAmt"
-                  id="valueAmt"
+                <NumberFormat
+                  thousandsGroupStyle="thousand"
+                  decimalSeparator="."
+                  displayType="input"
+                  thousandSeparator={true}
+                  allowNegative={true}
                   className="form-control"
+                  value={value}
+                  onValueChange={(values) => {
+                    const { formattedValue, value } = values;
+                    setValue(value);
+                  }}
                 />
               </div>
             </div>

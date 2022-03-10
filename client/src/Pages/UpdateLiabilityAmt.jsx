@@ -5,11 +5,13 @@ import { useNavigate, Link, useParams } from "react-router-dom";
 import dayjs from "dayjs";
 import { UserContext } from "../App";
 import { HomeIcon } from "../Components/HomeIcon";
+import NumberFormat from "react-number-format";
 
 export const UpdateLiabilityAmt = () => {
   const [userContext, setUserContext] = useContext(UserContext);
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
+  const [value, setValue] = useState();
 
   const { liabilityid } = useParams();
   const [currentLiability, setCurrentLiability] = useState({});
@@ -35,12 +37,12 @@ export const UpdateLiabilityAmt = () => {
     fetchCurrentLiability();
   }, []);
 
-  console.log(currentLiability);
-
+  const getValue = String(currentLiability?.liabilityValue?.[0]?.valueAmt);
+  console.log(getValue);
   const handleSubmit = async (e) => {
     e.preventDefault();
     const editLiabilityAmount = {
-      valueAmt: e.target.valueAmt.value,
+      valueAmt: value,
       date: e.target.date.value,
     };
     await axios.post(
@@ -79,12 +81,20 @@ export const UpdateLiabilityAmt = () => {
             </label>
             <div className="input-group">
               <div className="input-group-text col-1">$</div>
-              <input
-                type="number"
-                name="valueAmt"
-                id="valueAmt"
+              <NumberFormat
+                // defaultValue={getValue}
+                isNumericString={true}
+                thousandsGroupStyle="thousand"
+                decimalSeparator="."
+                displayType="input"
+                thousandSeparator={true}
+                allowNegative={true}
                 className="form-control"
-                defaultValue={currentLiability?.liabilityValue?.[0]?.valueAmt}
+                // value={value}
+                onValueChange={(values) => {
+                  const { formattedValue, value } = values;
+                  setValue(value);
+                }}
               />
             </div>
           </div>

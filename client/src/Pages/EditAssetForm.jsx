@@ -5,12 +5,14 @@ import { useNavigate, Link, useParams } from "react-router-dom";
 import { UserContext } from "../App";
 import { HomeIcon } from "../Components/HomeIcon";
 
+
 export const EditAssetForm = () => {
   const [userContext, setUserContext] = useContext(UserContext);
   const navigate = useNavigate();
   const [message, setMessage] = useState("");
   const { assetid } = useParams();
   const [currentAsset, setCurrentAsset] = useState({});
+
 
   const fetchCurrentAsset = async () => {
     await axios({

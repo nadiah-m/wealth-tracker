@@ -3,18 +3,20 @@ import { React, useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { UserContext } from "../App";
 import { HomeIcon } from "../Components/HomeIcon";
+import NumberFormat from "react-number-format";
 
 export const NewLiabilityForm = () => {
   const navigate = useNavigate();
   const [message, setMessage] = useState("");
   const [userContext, setUserContext] = useContext(UserContext);
+  const [value, setValue] = useState();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const newLiability = {
       liabilityName: e.target.liabilityName.value,
       liabilityType: e.target.liabilityType.value,
-      valueAmt: e.target.valueAmt.value,
+      valueAmt: value,
       date: e.target.date.value,
       user: userContext?.data?._id,
     };
@@ -84,11 +86,18 @@ export const NewLiabilityForm = () => {
               </label>
               <div className="input-group">
                 <div className="input-group-text col-1">$</div>
-                <input
-                  type="number"
-                  name="valueAmt"
-                  id="valueAmt"
+                <NumberFormat
+                  thousandsGroupStyle="thousand"
+                  decimalSeparator="."
+                  displayType="input"
+                  thousandSeparator={true}
+                  allowNegative={true}
                   className="form-control"
+                  value={value}
+                  onValueChange={(values) => {
+                    const { formattedValue, value } = values;
+                    setValue(value);
+                  }}
                 />
               </div>
             </div>

@@ -1,5 +1,5 @@
 
-
+import NumberFormat from "react-number-format";
 
 export const AssetProjectionForm = (props) => {
   return (
@@ -22,13 +22,25 @@ export const AssetProjectionForm = (props) => {
             </label>
             <div className="input-group">
               <div className="input-group-text col-1">$</div>
-
-              <input
+              <NumberFormat 
+               thousandsGroupStyle="thousand"
+               decimalSeparator="."
+               displayType="input"
+               thousandSeparator={true}
+               allowNegative={true}
+               className="form-control"
+               value={props.initialAmt}
+               onValueChange={(values) => {
+                const { formattedValue, value } = values;
+                props.setInitialAmt(value);
+              }}
+               />
+              {/* <input
                 type="number"
                 className="form-control"
                 value={props.initialAmt}
                 onChange={(e) => props.setInitialAmt(e.target.value)}
-              />
+              /> */}
             </div>
             <br />
             <label htmlFor="contrAmt" className="form-label">
@@ -36,13 +48,25 @@ export const AssetProjectionForm = (props) => {
             </label>
             <div className="input-group">
               <div className="input-group-text col-1">$</div>
-
-              <input
+              <NumberFormat 
+               thousandsGroupStyle="thousand"
+               decimalSeparator="."
+               displayType="input"
+               thousandSeparator={true}
+               allowNegative={true}
+               className="form-control"
+               value={props.contrAmt}
+               onValueChange={(values) => {
+                const { formattedValue, value } = values;
+                props.setContrAmt(value);
+              }}
+               />
+              {/* <input
                 type="number"
                 className="form-control"
                 value={props.contrAmt}
                 onChange={(e) => props.setContrAmt(e.target.value)}
-              />
+              /> */}
             </div>
      
      

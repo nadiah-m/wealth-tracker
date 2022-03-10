@@ -21,7 +21,7 @@ const verify = (req, res, next) => {
 
 router.post("/new", verify, async (req, res) => {
   const currentUser = req.user.id;
-  console.log(currentUser);
+
   const newAssetProjection = {
     assetName: req.body.assetName,
     initialAmt: req.body.initialAmt,
