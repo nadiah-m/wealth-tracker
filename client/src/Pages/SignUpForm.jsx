@@ -3,8 +3,7 @@ import { useFormik, validateYupSchema } from "formik";
 import axios from "axios";
 import * as Yup from "yup";
 import { UserContext } from "../App";
-import { useNavigate } from "react-router-dom";
-
+import { useNavigate, Link } from "react-router-dom";
 
 export const SignUpForm = () => {
   const [allUsernames, setAllUsernames] = useState([]);
@@ -186,6 +185,10 @@ export const SignUpForm = () => {
           </div>
         </form>
         <div className="text-success">{message}</div>
+        Have an account?
+        <Link className="text-decoration-none" to="/signin">
+          Login
+        </Link>
       </div>
     </div>
   );

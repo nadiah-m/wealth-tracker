@@ -171,20 +171,20 @@ function Home() {
   const options = {
     layout: { padding: 50 },
     maintainAspectRatio: false,
-    plugins: {
-      datalabels: {
-        formatter: function (value, context) {
-          let datasets = context.chart.data.datasets;
-          if (datasets.indexOf(context.dataset) === datasets.length - 1) {
-            let sum = datasets[0].data.reduce((a, b) => a + b, 0);
-            let percentage = Math.round((value / sum) * 100) + "%";
-            return (
-              context.chart.data.labels[context.dataIndex] + " " + percentage
-            );
-          }
-        },
-      },
-    },
+    // plugins: {
+    //   datalabels: {
+    //     formatter: function (value, context) {
+    //       let datasets = context.chart.data.datasets;
+    //       if (datasets.indexOf(context.dataset) === datasets.length - 1) {
+    //         let sum = datasets[0].data.reduce((a, b) => a + b, 0);
+    //         let percentage = Math.round((value / sum) * 100) + "%";
+    //         return (
+    //           context.chart.data.labels[context.dataIndex] + " " + percentage
+    //         );
+    //       }
+    //     },
+    //   },
+    // },
   };
   return (
     <div className="container-fluid">
