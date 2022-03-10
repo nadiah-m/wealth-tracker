@@ -17,6 +17,7 @@ import { EditLiabilityForm } from "./Pages/EditLiabilityForm";
 import { UpdateLiabilityAmt } from "./Pages/UpdateLiabilityAmt";
 import { LiabilityDetails } from "./Pages/LiabilityDetails";
 
+
 export const UserContext = createContext();
 
 function App() {
@@ -144,6 +145,7 @@ function App() {
               element={<LiabilityDetails />}
             />
           </Routes>
+          
         </main>
       </div>
     </UserContext.Provider>

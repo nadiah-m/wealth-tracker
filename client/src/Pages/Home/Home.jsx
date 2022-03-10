@@ -12,7 +12,7 @@ import { HomeLiabilityTable } from "../../Components/HomeLiabilityTable";
 
 function Home() {
   const [userContext, setUserContext] = useContext(UserContext);
-  Chart.register(ChartDataLabels);
+  // Chart.register(ChartDataLabels);
   const [allAssets, setAllAssets] = useState([]);
   const [allLiabilities, setAllLiabilities] = useState([]);
   const navigate = useNavigate();

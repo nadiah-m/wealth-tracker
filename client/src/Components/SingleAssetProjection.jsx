@@ -1,12 +1,18 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { Line } from "react-chartjs-2";
 import Chart from "chart.js/auto";
-import AssetForm from "./AssetProjectionForm";
+import { AssetProjectionForm } from "./AssetProjectionForm";
+import axios from "axios";
+import { UserContext } from "../App";
 
 //individual asset to add and calculate future projections
 
 function SingleAssetProjection(props) {
+  const [message, setMessage] = useState("");
+  const [displayResult, setDisplayResult] = useState("");
+  const [userContext, setUserContext] = useContext(UserContext);
+
   const [assetName, setAssetName] = useState("");
   const [frequency, setFrequency] = useState(1);
   const [initialAmt, setInitialAmt] = useState("");
@@ -29,7 +35,7 @@ function SingleAssetProjection(props) {
   const futureValues = [];
 
   //max no of years of savings
-  //if years< no of savings => amt will be previous value * interest rate 
+  //if years< no of savings => amt will be previous value * interest rate
 
   for (let i = 0; i <= years; i++) {
     let t = i;
@@ -96,9 +102,9 @@ function SingleAssetProjection(props) {
     },
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const asset = {
+    const projectionAsset = {
       assetName,
       initialAmt,
       contrAmt,
@@ -106,39 +112,83 @@ function SingleAssetProjection(props) {
       frequency,
       years,
       futureValues,
+      user: userContext?.data?._id,
     };
-    props.addAssets(asset);
-    // console.log(asset);
+    setDisplayResult(`Based on your compounding schedule and estimated interest rate, you will
+    have ${finalFVNr} in ${years} years from ${assetName}.`);
+    await axios({
+      method: "post",
+      url: "/api/assetprojections/new",
+      headers: { authorization: "Bearer " + userContext.accessToken },
+      data: projectionAsset,
+    }).then((response) => {
+      if (response.data.status === "not ok") {
+        console.log(response.data.message);
+        setMessage("You are not logged in. Please login or sign up");
+      } else {
+        console.log(response.data.message);
+      }
+    });
+    props.addAssets(projectionAsset);
+    console.log(projectionAsset);
+  };
+
+  const handleSubmitYears = (e) => {
+    e.preventDefault();
+    console.log(years);
   };
 
   return (
     <>
-    How many years are you saving for?
-<form>
-
-</form>
-
-      <AssetForm
-        assetName={assetName}
-        initialAmt={initialAmt}
-        contrAmt={contrAmt}
-        intRate={intRate}
-        frequency={frequency}
-        years={years}
-        handleSubmit={handleSubmit}
-        setAssetName={setAssetName}
-        setInitialAmt={setInitialAmt}
-        setContrAmt={setContrAmt}
-        setYears={setYears}
-        setIntRate={setIntRate}
-        setFrequency={setFrequency}
-      />
-
-      <p>
+      <div className="container mt-5">
+        <h3>Goals Calculator</h3>
+        <div className="row d-flex card mx-auto" style={{ width: "50rem" }}>
+          <form onSubmit={handleSubmitYears}>
+            <div className="px-5 m-5 align-self-center">
+              <label htmlFor="years" className="form-label">
+                How many years are you saving for?
+              </label>
+              <input
+                type="number"
+                id="years"
+                value={years}
+                onChange={(e) => setYears(e.target.value)}
+                className="form-control"
+              />
+              <div className="d-grid col-6 mx-auto p-5">
+                <button type="submit" className="btn btn-secondary">
+                  Save
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div
+          className="mt-5 row d-flex card mx-auto"
+          style={{ width: "50rem" }}
+        >
+          <AssetProjectionForm
+            assetName={assetName}
+            initialAmt={initialAmt}
+            contrAmt={contrAmt}
+            intRate={intRate}
+            frequency={frequency}
+            // years={years}
+            handleSubmit={handleSubmit}
+            setAssetName={setAssetName}
+            setInitialAmt={setInitialAmt}
+            setContrAmt={setContrAmt}
+            // setYears={setYears}
+            setIntRate={setIntRate}
+            setFrequency={setFrequency}
+          />
+        </div>
+      </div>
+      {/* <p>
         Based on your compounding schedule and estimated interest rate, you will
         have ${finalFVNr} in {years} years from {assetName}.
-      </p>
-
+      </p> */}
+      {displayResult}
       <Line data={data} options={options} />
     </>
   );
