@@ -26,7 +26,7 @@ export const HomeAssetTable = (props) => {
           </thead>
           <tbody>
             {props.allAssets.map((asset, index) => (
-              <tr key = {index}>
+              <tr key={index}>
                 <th scope="row">{index + 1}</th>
                 <td>{asset?.assetName}</td>
                 <td>{asset?.assetType}</td>
@@ -44,6 +44,18 @@ export const HomeAssetTable = (props) => {
                   <div className="row">
                     <div className="col">
                       <Link
+                        to={`/${userContext?.data?.username}/assets/${asset?._id}`}
+                      >
+                        <button
+                          type="button"
+                          className="btn btn-secondary btn-sm"
+                        >
+                          <ViewIcon />
+                        </button>
+                      </Link>
+                    </div>
+                    <div className="col">
+                      <Link
                         to={`/${userContext?.data?.username}/assets/${asset?._id}/edit`}
                       >
                         <button
@@ -56,27 +68,6 @@ export const HomeAssetTable = (props) => {
                     </div>
                     <div className="col">
                       <Link
-                        to={`/${userContext?.data?.username}/assets/${asset?._id}`}
-                      >
-                        <button
-                          type="button"
-                          className="btn btn-secondary btn-sm"
-                        >
-                          <ViewIcon />
-                        </button>
-                      </Link>
-                    </div>
-                    <div className="col">
-                      <button
-                        type="button"
-                        className="btn btn-secondary btn-sm"
-                        onClick={() => props.handleDeleteAsset(asset?._id)}
-                      >
-                        <DeleteIcon />
-                      </button>
-                    </div>
-                    <div className="col">
-                      <Link
                         to={`/${userContext?.data?.username}/assets/${asset?._id}/updateAmt`}
                       >
                         <button
@@ -86,6 +77,16 @@ export const HomeAssetTable = (props) => {
                           <UpdateMoneyIcon />
                         </button>
                       </Link>
+                    </div>
+
+                    <div className="col">
+                      <button
+                        type="button"
+                        className="btn btn-secondary btn-sm"
+                        onClick={() => props.handleDeleteAsset(asset?._id)}
+                      >
+                        <DeleteIcon />
+                      </button>
                     </div>
                   </div>
                 </td>

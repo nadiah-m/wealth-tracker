@@ -44,6 +44,18 @@ export const HomeLiabilityTable = (props) => {
                   <div className="row">
                     <div className="col">
                       <Link
+                        to={`/${userContext?.data?.username}/liabilities/${liability?._id}`}
+                      >
+                        <button
+                          type="button"
+                          className="btn btn-secondary btn-sm"
+                        >
+                          <ViewIcon />
+                        </button>
+                      </Link>
+                    </div>
+                    <div className="col">
+                      <Link
                         to={`/${userContext?.data?.username}/liabilities/${liability?._id}/edit`}
                       >
                         <button
@@ -56,16 +68,17 @@ export const HomeLiabilityTable = (props) => {
                     </div>
                     <div className="col">
                       <Link
-                        to={`/${userContext?.data?.username}/liabilities/${liability?._id}`}
+                        to={`/${userContext?.data?.username}/liabilities/${liability?._id}/updateAmt`}
                       >
                         <button
                           type="button"
                           className="btn btn-secondary btn-sm"
                         >
-                          <ViewIcon />
+                          <UpdateMoneyIcon />
                         </button>
                       </Link>
                     </div>
+
                     <div className="col">
                       <button
                         type="button"
@@ -76,18 +89,6 @@ export const HomeLiabilityTable = (props) => {
                       >
                         <DeleteIcon />
                       </button>
-                    </div>
-                    <div className="col">
-                      <Link
-                        to={`/${userContext?.data?.username}/liabilities/${liability?._id}/updateAmt`}
-                      >
-                        <button
-                          type="button"
-                          className="btn btn-secondary btn-sm"
-                        >
-                          <UpdateMoneyIcon />
-                        </button>
-                      </Link>
                     </div>
                   </div>
                 </td>

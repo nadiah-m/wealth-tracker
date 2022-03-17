@@ -4,7 +4,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useState, createContext, useEffect } from "react";
 import { Routes, Route, Link, Navigate, useParams } from "react-router-dom";
-import AssetProjection from "./Pages/AssetProjection/AssetProjection";
+import AssetProjection from "./Pages/AssetProjection";
 import Home from "./Pages/Home/Home";
 import { SignInForm } from "./Pages/SignInForm";
 import { SignUpForm } from "./Pages/SignUpForm";

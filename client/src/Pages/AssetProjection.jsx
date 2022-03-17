@@ -1,4 +1,4 @@
-import SingleAssetProjection from "../SingleAssetProjection";
+import SingleAssetProjection from "./SingleAssetProjection";
 
 
 function AssetProjection(props) {
